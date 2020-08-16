@@ -17,10 +17,13 @@ De nouvelles fonctionnalités seront implémentées.
 Pour installer ce projet, commencez par cloner ce répertoire.
 - Installez la dernière version de Unity (2019.4.3f1 a ce jour): https://store.unity.com/#plans-individual
 - Installez Visual Studio 2019 : https://visualstudio.microsoft.com/fr/
-- Ouvrez le projet dans Unity, Allez dand File > Build settings, vérifiez que la platforme sélectionnée est bien Universal Windows Platform, et que l'architechture est x86 pour la hololens 1 et ARM pour la hololens 2, puis faites "Build".
+- Dans votre menu Hierarchy (contenant les différents gameObjects de votre scène), sélectionnez MixedRealityToolkit, puis dans l'inspecteur, sélectionnez le profil correspondant au model de votre Hololens :
+	- Hololens1ConfigurationProfil_clone pour la Hololens 1.
+	- Hololens2ConfigurationProfil_clone pour la Hololens 2.
+- Ouvrez le projet dans Unity, Allez dand File > Build settings, vérifiez que la platforme sélectionnée est bien Universal Windows Platform, et que l'architecture est x86 pour la hololens 1 ou ARM pour la hololens 2, puis faites "Build".
 - Une fois terminé, ouvrez la solution dans Visual Studio, choisissez comme configuration "release", l'architecture doit être x86 pour la hololens 1 ou ARM pour la hololens 2, et choisissez comme debogeur "Ordinateur distant".
 - Ouvrez les propriétés de déboguage, section déboguage, dans le champs "nom de l'ordinateur", placez y l'adresse IP de la Hololens (disponible dans les paramètres réseau de la Hololens).
 - Il ne vous reste plus qu'a déployer la solution via le menu généré. 
 
 ## Lancement
-L'application doit maintenant apparaitre dans la liste des applications installées de la Hololens, il ne vous reste plus qu'a la lancer.
+L'application doit maintenant apparaitre dans la liste des applications installées du Hololens, il ne vous reste plus qu'a la lancer.
