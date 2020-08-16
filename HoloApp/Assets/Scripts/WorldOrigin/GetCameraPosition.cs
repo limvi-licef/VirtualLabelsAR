@@ -19,9 +19,11 @@ public class GetCameraPosition : MonoBehaviour
         cam = Camera.main;
     }
 
-    //#############################################################################
-    //#############################################################################
-    //Save Camera position to file (world and local position)
+    /*!
+     * \brief Save camero position to file
+     * 
+     * Camera position in camera space is saved in CamLocalPosition.txt. Camera position in WorldOrigin space is saved in CamWorldPosition.txt.
+     */
     void Update()
     {
         timeLeft -= Time.deltaTime;
@@ -29,8 +31,9 @@ public class GetCameraPosition : MonoBehaviour
         if (timeLeft <= 0.0f)
         {
             Vector3 localCamPos = cam.transform.position;
-            Vector3 worldCamPos = TransformPoint.InverseTransformPointUnscaled(transform, localCamPos);
+            Vector3 worldCamPos = TransformPoint.InverseTransformPointUnscaled(transform, localCamPos); //!< Transform point from Camera space to WorldOrigin space.
 
+            //save coordinates
             FileModifier.Save("CamPosition/CamLocalPosition.txt", localCamPos.ToString());
             FileModifier.Save("CamPosition/CamWorldPosition.txt", worldCamPos.ToString());
             timeLeft = 1.0f;

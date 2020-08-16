@@ -10,18 +10,29 @@ using UnityEngine;
 
 public static class TransformPoint
 {
-    //######################################################################################################
-    //######################################################################################################
-    //transform local coordinates to world coordinates (WorldOrigin gameObject to Camera)
+    
+    /*!
+     * \brief transform local coordinates to Camera space coordinates.
+     * 
+     * \param transform Transform of the gameObject.
+     * \param position Coordinates to transform.
+     * 
+     * \return Vector4 camera space coordinates
+     */
     public static Vector3 TransformPointUnscaled(this Transform transform, Vector3 position)
     {
         var localToWorldMatrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
         return localToWorldMatrix.MultiplyPoint3x4(position);
     }
 
-    //######################################################################################################
-    //######################################################################################################
-    //transform world coordinates to local coordinates (Camera to WorldOrigin gameObject)
+    /*!
+     * \brief transform Camera space coordinates to local coordinates.
+     * 
+     * \param transform Transform of the gameObject.
+     * \param position Coordinates to transform.
+     * 
+     * \return Vector4 local coordinates
+     */
     public static Vector3 InverseTransformPointUnscaled(this Transform transform, Vector3 position)
     {
         var worldToLocalMatrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one).inverse;

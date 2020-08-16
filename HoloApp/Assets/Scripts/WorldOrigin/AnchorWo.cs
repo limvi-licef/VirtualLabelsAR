@@ -14,7 +14,11 @@ public class AnchorWo : MonoBehaviour
     public WorldAnchorManager worldAnchorManager;
     private bool isDefine = false;
 
-    // Create the WorldOrigin when the Hololens start the first time
+    /*!
+     * \brief Create a World Origin in (0,0,0), and anchor it.
+     * 
+     * When the app starts the first time, a World Origin is create in (0,0,0) with a world anchor. 
+     */
     void Start()
     {
         if(!isDefine)

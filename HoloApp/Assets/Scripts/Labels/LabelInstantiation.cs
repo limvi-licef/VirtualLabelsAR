@@ -10,9 +10,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.WSA.Input;
 
-//##################################################################################
-//##################################################################################
-//Instantiate label using voice recognizer
+/*!
+ * \brief Instantiate label
+ * 
+ * Instantiate a label using speechInputManager with "Create label" keyword.
+ */
 public class LabelInstantiation : MonoBehaviour
 {
     public GameObject label;

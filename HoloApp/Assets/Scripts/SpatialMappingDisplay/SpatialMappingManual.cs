@@ -12,9 +12,9 @@ using UnityEngine;
 
 public class SpatialMappingManual : MonoBehaviour
 {
-    //############################################################################
-    //############################################################################
-    //Set the spatial mapping visible
+    /*!
+     * \brief Set spatial mapping visible using voice recognizer ("Mapping On" keyword)
+     */
     public void SetVisible()
     {
         var observer = CoreServices.GetSpatialAwarenessSystemDataProvider<IMixedRealitySpatialAwarenessMeshObserver>();
@@ -25,9 +25,9 @@ public class SpatialMappingManual : MonoBehaviour
         }
     }
 
-    //############################################################################
-    //############################################################################
-    //Set the spatial mapping display to none
+    /*!
+     * \brief Set spatial mapping not visible using voice recognizer ("Mapping Off" keyword)
+     */
     public void SetNotVisible()
     {
         var observer = CoreServices.GetSpatialAwarenessSystemDataProvider<IMixedRealitySpatialAwarenessMeshObserver>();

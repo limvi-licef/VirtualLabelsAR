@@ -13,10 +13,13 @@ using UnityEngine.UI;
 
 public class Position : MonoBehaviour
 {
-    public TextMesh camWorldTxt;
+    public TextMesh camWorldTxt; //!< TextMesh used to display informations
     public GameObject WorldOrigin;
     private Camera cam;
 
+    /*!
+     * \brief Allow to display informations in front of the camera
+     */
     void Start()
     {
         WorldOrigin = GameObject.Find("WorldOrigin");

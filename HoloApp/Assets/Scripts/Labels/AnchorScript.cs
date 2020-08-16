@@ -13,9 +13,9 @@ public class AnchorScript : MonoBehaviour
 
     public WorldAnchorManager worldAnchorManager;
 
-    //###########################################################################################
-    //###########################################################################################
-    //this script is no longer used, the anchor is attached in TapToPlace.cs script
+    /*!
+     * \brief This script is no longer used. It create a world anchor to the gameobject attached.
+     */
     void Start()
     {
         //AnchorIt();
