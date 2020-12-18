@@ -5,3 +5,4 @@ HoloApp/Temp/
 /HoloApp/.vs/HoloApp/v16/Browse.VC.db
 /HoloApp/.vs/HoloApp/v16
 /.vs
+/HoloApp/Assets/MRTK/Providers/WindowsMixedReality/Shared/DotNetAdapter/.obj

@@ -2,68 +2,56 @@
 
 
 import cv2
+import time
+from numpy import zeros, uint8
 
+from set_env import *
+from lib.Video import Video
 
 ############################################################################################
-class VideoPlayer(cv2.VideoCapture):
+class VideoPlayer(Video):
 
-    MIN_S_MS = 0
-    SECONDS = 1
-    MIN_SEC = 2
+    STOP = 0
+    PLAY = 1
+    PAUSE = 2
 
     ########################################################################################
     def __init__(self, filename):
 
-        cv2.VideoCapture.__init__(self, filename)
+        Video.__init__(self, filename)
+        self.status = VideoPlayer.STOP
 
 
-        self.WIDTH = int(self.get(cv2.CAP_PROP_FRAME_WIDTH))
-        self.HEIGHT = int(self.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        self.FPS = self.get(cv2.CAP_PROP_FPS)
-        self.FRAME_COUNT = int(self.get(cv2.CAP_PROP_FRAME_COUNT))
-        self.TIME = self.FRAME_COUNT / self.FPS
+    ########################################################################################
+    def play(self):
 
-        self.current_frame = 0.0
+        if self.status == VideoPlayer.STOP:
+            self.setCurrentTime(0.0)
+
+        self.status = VideoPlayer.PLAY
+
+
+    ########################################################################################
+    def pause(self):
+
+        if self.status == VideoPlayer.PLAY:
+            self.status = VideoPlayer.PAUSE
+
+
+    ########################################################################################
+    def stop(self):
+
+        self.status = VideoPlayer.STOP
+        self.setCurrentTime(1.0, mode=Video.RATIO)
 
 
     ########################################################################################
     def read(self):
-        
-        self.current_frame += 1.0
 
-        return cv2.VideoCapture.read(self)
-
-
-    ########################################################################################
-    def getTime(self, mode='s'):
-        
-        if mode == VideoPlayer.MIN_S_MS:
-            return int(self.TIME/60), round(self.TIME%60), round(self.TIME%1*1000)
-        elif mode == VideoPlayer.MIN_SEC:
-            return int(self.TIME/60), round(self.TIME%60)
+        if self.status != VideoPlayer.PLAY:
+            return False, False
+        elif self.status == VideoPlayer.PLAY and self.getCurrentTime() >= self.TIME:
+            self.stop()
+            return False, False
         else:
-            return self.TIME
-
-
-    ########################################################################################
-    def getCurrentTime(self, mode='s'):
-
-        time = self.current_frame / self.FPS
-        
-        if mode == VideoPlayer.MIN_S_MS:
-            return int(time/60), round(time%60), round(time%1*1000)
-        elif mode == VideoPlayer.MIN_SEC:
-            return int(time/60), round(time%60)
-        else:
-            return time
-
-
-    ########################################################################################
-    def setCurrentTime(self, s, m=0, ms=0):
-
-        time_sec = m * 60
-        time_sec += s
-        time_sec += ms // 1000
-
-        current_frame = self.FRAME_COUNT * int(time_sec) // self.TIME
-        self.set(cv2.CAP_PROP_POS_FRAMES, current_frame)
+            return Video.read(self)
