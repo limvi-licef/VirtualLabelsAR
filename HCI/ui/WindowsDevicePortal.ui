@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>WindowsDevicePortal</class>
+ <widget class="QWidget" name="WindowsDevicePortal">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>355</width>
+    <height>193</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="4" column="0" alignment="Qt::AlignRight|Qt::AlignVCenter">
+    <widget class="QLabel" name="batteryLabel">
+     <property name="text">
+      <string>Battery:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1" alignment="Qt::AlignVCenter">
+    <widget class="QLabel" name="batteryLevel">
+     <property name="text">
+      <string>/</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QLineEdit" name="passwordInput"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="passwordLabel">
+     <property name="text">
+      <string>Password</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="hostLabel">
+     <property name="text">
+      <string>Host</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLineEdit" name="hostInput"/>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="loginLabel">
+     <property name="text">
+      <string>Login</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLineEdit" name="loginInput">
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" alignment="Qt::AlignRight|Qt::AlignTop">
+    <widget class="QLabel" name="previewLabel">
+     <property name="text">
+      <string>Preview:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1" alignment="Qt::AlignHCenter|Qt::AlignTop">
+    <widget class="QPushButton" name="previewButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>On</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QLabel" name="previewInfo">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1" alignment="Qt::AlignHCenter">
+    <widget class="QPushButton" name="connectButton">
+     <property name="text">
+      <string>Connect</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>connectButton</sender>
+   <signal>clicked()</signal>
+   <receiver>WindowsDevicePortal</receiver>
+   <slot>setupConnection()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>46</x>
+     <y>98</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>116</x>
+     <y>69</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>previewButton</sender>
+   <signal>clicked()</signal>
+   <receiver>WindowsDevicePortal</receiver>
+   <slot>togglePreview()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>203</x>
+     <y>150</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>177</x>
+     <y>96</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>setupConnection()</slot>
+  <slot>togglePreview()</slot>
+ </slots>
+</ui>
