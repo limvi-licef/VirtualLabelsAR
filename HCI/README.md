@@ -1,11 +1,10 @@
 # VirtualLabelsAR
 
-To install, open an Anaconda PowerShell prompt in administrator.
+To install, open an Anaconda prompt.
 
 In the HCI directory, run install.bat.
-In case you have an error with the installation of spyder, you can ignore it.
 
-run open_prompt.bat
+Incase the virtual environment virtual_labels_ar is not yet active, run the following command: conda activate virtual_labels_ar
 
 open the file config.py, and set the following information:
 - CONFIG["host"]: ip of the Hololens (both the PC and the Hololens must be in the same network)
