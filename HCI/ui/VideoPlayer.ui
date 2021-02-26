@@ -126,7 +126,7 @@
   </connection>
   <connection>
    <sender>timeSlider</sender>
-   <signal>valueChanged(int)</signal>
+   <signal>sliderMoved(int)</signal>
    <receiver>VideoPlayer</receiver>
    <slot>setCurrentTime(int)</slot>
    <hints>

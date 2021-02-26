@@ -46,6 +46,7 @@ class Ui_LabelManager(object):
         self.retranslateUi(LabelManager)
         self.addButton.clicked.connect(LabelManager.create)
         self.list.itemClicked['QListWidgetItem*'].connect(LabelManager.displayLabelPanel)
+        self.removeButton.clicked.connect(LabelManager.remove)
         QtCore.QMetaObject.connectSlotsByName(LabelManager)
 
     def retranslateUi(self, LabelManager):

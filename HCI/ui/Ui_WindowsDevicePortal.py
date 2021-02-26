@@ -69,7 +69,7 @@ class Ui_WindowsDevicePortal(object):
         self.gridLayout.addWidget(self.connectButton, 3, 1, 1, 1, QtCore.Qt.AlignHCenter)
 
         self.retranslateUi(WindowsDevicePortal)
-        self.connectButton.clicked.connect(WindowsDevicePortal.setupConnection)
+        self.connectButton.clicked.connect(WindowsDevicePortal.connection)
         self.previewButton.clicked.connect(WindowsDevicePortal.togglePreview)
         QtCore.QMetaObject.connectSlotsByName(WindowsDevicePortal)
 
