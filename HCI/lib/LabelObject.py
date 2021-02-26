@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-
+############################################################################################
+# Packages
 import numpy as np
 from OpenGL.GL import *
 import OpenGL.GL.shaders as shaders
@@ -17,6 +18,7 @@ from time import time
 class LabelObject:
     
     
+    # default label sizes
     WIDTH = 320
     HEIGHT = 180
        
@@ -24,8 +26,9 @@ class LabelObject:
     ######################################################################
     def __init__(self, data=None, ID=None):
         
-        self._setVertices()
-        self.initTexture()
+        self.initialized = False
+        #self._setVertices()
+        #self.initTexture()
         
         if data:
             
@@ -142,25 +145,32 @@ class LabelObject:
     ######################################################################
     def draw(self, shader):
 
-        w, h = LabelObject.WIDTH, LabelObject.HEIGHT
-        
-        glUseProgram(shader)
-        self.vbo.bind()
-        
-        glActiveTexture(GL_TEXTURE0+self.texture)
-        glBindTexture(GL_TEXTURE_2D, self.texture);
-        glUniform1i(shader.uTexture, self.texture)
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, self.render)
-        
-        glUniformMatrix4fv(shader.uPosition, 1, False, glm.value_ptr(self.position))
-        
-        glEnableVertexAttribArray(shader.aCoords)
-        glVertexAttribPointer(shader.aCoords, 4, GL_FLOAT, False, 0, ct.c_void_p(0))
-        glDrawArrays(GL_QUADS, 0, 4)
+        if not self.initialized:
+            self.initialized = True
+            glUseProgram(shader)
+            self._setVertices()
+            self.initTexture()
 
-        glBindTexture(GL_TEXTURE_2D, 0);
-        self.vbo.unbind()
-        glUseProgram(0)
+        else:
+            w, h = LabelObject.WIDTH, LabelObject.HEIGHT
+            
+            glUseProgram(shader)
+            self.vbo.bind()
+            
+            glActiveTexture(GL_TEXTURE0+self.texture)
+            glBindTexture(GL_TEXTURE_2D, self.texture);
+            glUniform1i(shader.uTexture, self.texture)
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, self.render)
+            
+            glUniformMatrix4fv(shader.uPosition, 1, False, glm.value_ptr(self.position))
+            
+            glEnableVertexAttribArray(shader.aCoords)
+            glVertexAttribPointer(shader.aCoords, 4, GL_FLOAT, False, 0, ct.c_void_p(0))
+            glDrawArrays(GL_QUADS, 0, 4)
+
+            glBindTexture(GL_TEXTURE_2D, 0);
+            self.vbo.unbind()
+            glUseProgram(0)
         
         
     ######################################################################
@@ -168,15 +178,20 @@ class LabelObject:
     def test(config):
         
         import time
+        
+        # set shader location
         LabelObject.SHADERS = config["shaders"]
         
+        # start OpenGL
         W, H = 640, 360
         glfw.init()
         win = glfw.create_window(W, H, "Label Object", None, None)
         glfw.make_context_current(win)
 
+        # get the shader program
         labelShader = LabelObject.getShader()
         
+        # first label, created with dict, in front of user
         label0 = LabelObject({
             'id': 1612520470451.0574,
             'info': {
@@ -190,6 +205,7 @@ class LabelObject:
                 [0.0, 0.0, 1.0, 0.0],
                 [0.0, 0.0, 0.0, 1.0]]
             })
+        
         
         label1 = LabelObject()
         label1.setPos((0.2, 0.0, 0.0), (0, 30))

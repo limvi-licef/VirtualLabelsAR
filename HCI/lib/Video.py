@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
+############################################################################################
 import cv2
 import time
 
@@ -33,9 +34,21 @@ class Video(cv2.VideoCapture):
         self.HEIGHT = int(self.get(cv2.CAP_PROP_FRAME_HEIGHT))
         self.FPS = self.get(cv2.CAP_PROP_FPS)
         self.FRAME_COUNT = int(self.get(cv2.CAP_PROP_FRAME_COUNT))
-        self.TIME = self.FRAME_COUNT / self.FPS
+        self.TIME = self.FRAME_COUNT / (self.FPS+10e-9)
         
         self.start = time.time()
+
+
+    ########################################################################################
+    def getFrameNumber(self, mode=1):
+
+        """
+            Return current frame number.
+            
+            @return: int
+        """
+        
+        return int(self.get(cv2.CAP_PROP_POS_FRAMES))
 
 
     ########################################################################################
@@ -169,6 +182,7 @@ class Video(cv2.VideoCapture):
         cv2.destroyAllWindows()
         
         
+############################################################################################
 if __name__ == "__main__":
     
     from config import *

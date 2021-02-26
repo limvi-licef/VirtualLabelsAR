@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 
+##########################################################################
+# Packages
 import numpy as np
 from OpenGL.GL import *
 import OpenGL.GL.shaders as shaders
@@ -15,53 +17,76 @@ from os.path import join
 class MeshObject:
     
     
-    SHADERS = ""
+    SHADERS = "" # shader file location
     
     
     ######################################################################
     def __init__(self, data, context=True):
         
+        """
+            Constructor. Takes data and prepares buffer if an OpenGL context exists.
+            
+            @arg data: list or dict, data of mesh
+            @arg context: bool that indicates if OpenGL buffers should be prepared
+        """
+        
         if type(data)==list:
-            self.buildFromList(data)
+            self._buildFromList(data)
         else:
-            self.buildFromDict(data)
+            self._buildFromDict(data)
             
         if context: self.prepare()
         
         
     ######################################################################
-    def buildFromList(self, data):
+    def _buildFromList(self, data):
+        
+        """
+            Called in constructor. Build arrays of data from a list of saved data.
+            
+            @arg data: list of arrays.
+        """
         
         self.id = data[0]
-        self.vt = data[1]
-        self.nt = data[2]
-        self.vertices = data[3]
-        self.normals = data[4]
-        self.indices = data[5]
+        self.vt = np.array(data[1], dtype=np.float32)
+        self.nt = np.array(data[2], dtype=np.float32)
+        self.vertices = np.array(data[3], dtype=np.float32)
+        self.normals = np.array(data[4], dtype=np.float32)
+        self.indices = np.array(data[5], dtype=np.uint32)
             
 
     ######################################################################
-    def buildFromDict(self, data):
+    def _buildFromDict(self, data):
         
-            self.id = data["Surface"]["SurfaceId"]
-            self.vt = np.array(data["Surface"]["VertexTransform"]).reshape((4,4))
-            self.nt = np.array(data["Surface"]["NormalTransform"]).reshape((4,4))
-            self.vertices = np.array([
-                data["Surface"]["Vertices"]["x"],
-                data["Surface"]["Vertices"]["y"],
-                data["Surface"]["Vertices"]["z"],
-                data["Surface"]["Vertices"]["w"]
-            ], dtype=np.float32).transpose()
-            self.normals = np.array([
-                data["Surface"]["Normals"]["x"],
-                data["Surface"]["Normals"]["y"],
-                data["Surface"]["Normals"]["z"]
-            ], dtype=np.float32).transpose()
-            self.indices = np.array(data["Surface"]["Indices"], dtype=np.uint32)
+        """
+            Called in constructor. Build arrays of data from a dict provided by WDP (via websocket).
+            
+            @arg data: dict of data.
+        """
+        
+        self.id = data["Surface"]["SurfaceId"]
+        self.vt = np.array(data["Surface"]["VertexTransform"]).reshape((4,4))
+        self.nt = np.array(data["Surface"]["NormalTransform"]).reshape((4,4))
+        self.vertices = np.array([
+            data["Surface"]["Vertices"]["x"],
+            data["Surface"]["Vertices"]["y"],
+            data["Surface"]["Vertices"]["z"],
+            data["Surface"]["Vertices"]["w"]
+        ], dtype=np.float32).transpose()
+        self.normals = np.array([
+            data["Surface"]["Normals"]["x"],
+            data["Surface"]["Normals"]["y"],
+            data["Surface"]["Normals"]["z"]
+        ], dtype=np.float32).transpose()
+        self.indices = np.array(data["Surface"]["Indices"], dtype=np.uint32)
             
         
     ######################################################################
     def prepare(self):
+        
+        """
+            Creates buffers from arrays of data.
+        """
         
         self.vertexTransform = glm.mat4(self.vt)
         self.normalTransform = glm.mat4(self.nt)
@@ -72,6 +97,13 @@ class MeshObject:
         
     ######################################################################
     def draw(self, shader, mode="triangle"):
+        
+        """
+            Draw mesh by using a shader program.
+            
+            @arg shader: shader program object to use
+            @arg mode: str, draw mode ('point', 'lines', 'triangles')
+        """
         
         glUseProgram(shader)
         glUniformMatrix4fv(shader.uVertexTransform, 1, False, glm.value_ptr(self.vertexTransform))
@@ -91,6 +123,8 @@ class MeshObject:
 
         if mode =="point":
             glDrawElements(GL_POINTS, self.indices.shape[0], GL_UNSIGNED_INT, ct.c_void_p(0));
+        if mode =="lines":
+            glDrawElements(GL_LINE_LOOP, self.indices.shape[0], GL_UNSIGNED_INT, ct.c_void_p(0));
         else:
             glDrawElements(GL_TRIANGLES, self.indices.shape[0], GL_UNSIGNED_INT, ct.c_void_p(0))
 
@@ -101,19 +135,29 @@ class MeshObject:
     ######################################################################
     def save(self):
         
+        """
+            Return an array which contains all mesh information.
+            
+            @return array of arrays
+        """
+        
         return [
             self.id,
-            self.vt,
-            self.nt,
-            self.vertices,
-            self.normals,
-            self.indices
+            self.vt.tolist(),
+            self.nt.tolist(),
+            self.vertices.tolist(),
+            self.normals.tolist(),
+            self.indices.tolist()
         ]
         
         
     ######################################################################
     @staticmethod
     def getShader():
+        
+        """
+            Static method for getting the shader program
+        """
         
         assert MeshObject.SHADERS != "", "MeshObject.SHADERS not set"
         VERTEX = join(MeshObject.SHADERS, "mesh.vs")
@@ -139,15 +183,18 @@ class MeshObject:
     def test(config):
         
         import time
+        
+        # set the shader location
         MeshObject.SHADERS = config["shaders"]
         
+        # start OpenGL
         W, H = 640, 360
         glfw.init()
         win = glfw.create_window(W, H, "Mesh Object", None, None)
         glfw.make_context_current(win)
-
-        meshShader = MeshObject.getShader()
+        meshShader = MeshObject.getShader() # get the shader program
         
+        # create some data for creating a mesh object
         vertexMat4 = np.array([
             1, 0, 0, 0,
             0, 1, 0, 0,
@@ -176,13 +223,14 @@ class MeshObject:
             0, 1, 2,
             1, 2, 3
             ], dtype=np.uint32)
-        
         meshObject = MeshObject([123456789, vertexMat4, normalMat4, vertices, normals, indices])
         
+        # set projection matrix
         glUseProgram(meshShader)
         projection = glm.perspective(glm.radians(75), W/H, 0.25, 5.0)
         glUniformMatrix4fv(meshShader.uProjection, 1, False, glm.value_ptr(projection))
         
+        # scene rotation matrix
         rotation = glm.mat4()
         
         glClearColor(0.1, 0.3, 0.4, 1.0)
@@ -190,20 +238,26 @@ class MeshObject:
         while not glfw.window_should_close(win):
             
             start = time.time()
+            
+            # scene rotation
             rotation = glm.rotate(rotation, glm.radians(45/30), (0,1,0))
             
+            # compute new modelview matrix
             modelview = glm.mat4()
             modelview = glm.translate(modelview, (0,0,-1.5))
             modelview = modelview * rotation
             
+            # rendering
             glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
             glUseProgram(meshShader)
             glUniformMatrix4fv(meshShader.uModelview, 1, False, glm.value_ptr(modelview))
             meshObject.draw(meshShader)
             
+            # frame update
             glfw.swap_buffers(win)
             glfw.poll_events()
             
+            # time control
             tic = time.time() - start
             delay = 1/30 - tic
             if delay > 0:

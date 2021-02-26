@@ -22,10 +22,17 @@ class LabelManager:
     ######################################################################
     def __init__(self):
         
-        self.shader = LabelObject.getShader()
         self.labels = {}
         self.selected = None
         self.counter = 0
+        
+        
+    ######################################################################
+    def init(self):
+        
+        self.shader = LabelObject.getShader()
+        
+        return self
         
         
     ######################################################################
@@ -71,6 +78,18 @@ class LabelManager:
         else:
             return None
         
+        
+    ######################################################################
+    def removeSelected(self):
+        
+        if self.selected:
+            ID = self.selected.id
+            label = self.labels[ID]
+            del self.labels[ID]
+            return label
+        else:
+            return None
+        
            
     ######################################################################
     def draw(self):
@@ -91,7 +110,7 @@ class LabelManager:
         win = glfw.create_window(W, H, "Label Object", None, None)
         glfw.make_context_current(win)
 
-        labelManager = LabelManager()
+        labelManager = LabelManager().init()
         
         label0 = labelManager.create()
         label0.setPos((-0.1, 0.0, 0.0))
