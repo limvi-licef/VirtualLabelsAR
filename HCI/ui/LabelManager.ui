@@ -126,9 +126,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>removeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>LabelManager</receiver>
+   <slot>remove()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>172</x>
+     <y>21</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>120</x>
+     <y>116</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>create()</slot>
   <slot>displayLabelPanel(QListWidgetItem*)</slot>
+  <slot>remove()</slot>
  </slots>
 </ui>

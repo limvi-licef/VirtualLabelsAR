@@ -6,3 +6,6 @@ HoloApp/Temp/
 /HoloApp/.vs/HoloApp/v16
 /.vs
 /HoloApp/Assets/MRTK/Providers/WindowsMixedReality/Shared/DotNetAdapter/.obj
+HCI/__pycache__/
+HCI/lib/__pycache__/
+HCI/ui/__pycache__/

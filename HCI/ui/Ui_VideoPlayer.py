@@ -50,7 +50,7 @@ class Ui_VideoPlayer(object):
         self.retranslateUi(VideoPlayer)
         self.playButton.clicked.connect(VideoPlayer.play)
         self.pauseButton.clicked.connect(VideoPlayer.pause)
-        self.timeSlider.valueChanged['int'].connect(VideoPlayer.setCurrentTime)
+        self.timeSlider.sliderMoved['int'].connect(VideoPlayer.setCurrentTime)
         self.stopButton.clicked.connect(VideoPlayer.stop)
         QtCore.QMetaObject.connectSlotsByName(VideoPlayer)
 

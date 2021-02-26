@@ -128,7 +128,7 @@
    <sender>connectButton</sender>
    <signal>clicked()</signal>
    <receiver>WindowsDevicePortal</receiver>
-   <slot>setupConnection()</slot>
+   <slot>connection()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>46</x>
@@ -158,7 +158,7 @@
   </connection>
  </connections>
  <slots>
-  <slot>setupConnection()</slot>
+  <slot>connection()</slot>
   <slot>togglePreview()</slot>
  </slots>
 </ui>
