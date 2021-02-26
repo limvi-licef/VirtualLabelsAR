@@ -23,18 +23,35 @@ class QtLabelManager(QtWidgets.QWidget):
         
     def create(self):
         
+        self.canvas.makeCurrent()
         label = self.manager.create()
         self.ui.list.addItem(label.id)
         
+        
+    def remove(self):
+        
+        if self.manager.selected:
+            for item in self.ui.list.selectedItems():
+                row = self.ui.list.row(item)
+                self.ui.list.takeItem(row)
+                
+            label = self.manager.removeSelected()
+            self.ui.list.clearSelection()
+            self.panel.deleteLater()
+            self.ui.removeButton.setDisabled(True)
+            self.panel.deleteLater()
+            self.panel = None
         
         
     def displayLabelPanel(self, item):
         
         self.manager.select(item.text())
+        if self.panel: self.panel.deleteLater()
+        
         if self.manager.selected:
-            if self.panel: self.panel.deleteLater()
             self.panel = QtLabelObject(self.manager.selected)
             self.ui.verticalLayout.addWidget(self.panel)
+            self.ui.removeButton.setDisabled(False)
             
         
         
@@ -60,13 +77,6 @@ class QtLabelManager(QtWidgets.QWidget):
         labelManager = QtLabelManager()
         root.layout.addWidget(labelManager)
         root.setLayout(root.layout)
-        # labelManager = LabelManager()
-        
-        # label1 = labelManager.create()
-        # label1.setPos((-0.1, 0.0, 0.0))
-        
-        # label2 = labelManager.create()
-        # label2.setPos((0.1, 0.0, 0.0))
         
         glUseProgram(labelManager.manager.shader)
         projection = glm.perspective(glm.radians(28), W/H, 0.25, 5.0)
@@ -77,18 +87,6 @@ class QtLabelManager(QtWidgets.QWidget):
         glClearColor(0.1, 0.3, 0.4, 1.0)
         glEnable(GL_DEPTH_TEST)
         def draw():
-            
-            # if glfw.get_key(win, glfw.KEY_1):
-            #     labelManager.select(0)
-            # elif glfw.get_key(win, glfw.KEY_2):
-            #     labelManager.select(1)
-            # elif glfw.get_key(win, glfw.KEY_3):
-            #     labelManager.select(3)
-                
-            # label1.setText("1")
-            # label2.setText("2")
-            # if labelManager.selected:
-            #     labelManager.selected.setText("Selected")
             
             glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
             labelManager.manager.draw()

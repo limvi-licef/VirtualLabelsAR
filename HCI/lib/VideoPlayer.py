@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 
 
+############################################################################################
+# Packages
 import cv2
 import time
 from numpy import zeros, uint8
 
+# Lib
 from lib.Video import Video
+
 
 ############################################################################################
 class VideoPlayer(Video):
@@ -112,40 +116,45 @@ class VideoPlayer(Video):
                 return False, None
 
         # if current time exceeds video time, stop video
-        if self.getRecordTime() >= self.TIME:
+        elif self.getRecordTime() >= self.TIME:
             self.stop()
             return False, None
-
+        
         # if the video is too slow
         elif self.getRealTime() < self.getRecordTime():
             return False, None
             
         else:
             delay = self.getRealTime() - self.getRecordTime()
-            for n in range(int(delay / self.FPS)): Video.read(self)
+            for n in range(int(delay * self.FPS)): Video.read(self)
             return Video.read(self)
-        
-        
-    ########################################################################################
-    def wait(self):
-        
-        """
-            Method to call for controlling frame rate.
-        """
-        
-        while self.getRealTime() < self.getRecordTime():
-            pass
 
 
     ########################################################################################
     def interface(self, obj):
 
-        obj.videoPlayer = self
+        """
+            Interface in case of none possible inheritance.
+        """
+        
+        # constants
+        obj.WIDTH = self.WIDTH
+        obj.HEIGHT = self.HEIGHT
+        obj.FPS = self.FPS
+        obj.FRAME_COUNT = self.FRAME_COUNT
+        obj.TIME = self.TIME
+        
+        # attributes
+        obj.getStatus = lambda: self.status
+        
+        # methods
         obj.read = self.read
         obj.play = self.play
         obj.pause = self.pause
         obj.stop = self.stop
         obj.setCurrentTime = self.setCurrentTime
+        
+        return self
 
 
     ########################################################################################
@@ -212,6 +221,7 @@ class VideoPlayer(Video):
         root.destroy()
             
             
+############################################################################################
 if __name__ == "__main__":
     
     from config import *

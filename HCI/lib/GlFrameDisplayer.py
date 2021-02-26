@@ -91,6 +91,7 @@ class GlFrameDisplayer:
         
         if self.texture:
             glUseProgram(self.shader)
+            glActiveTexture(GL_TEXTURE0+self.texture)
             glBindTexture(GL_TEXTURE_2D, self.texture);
             glUniform1i(self.shader.uTexture, self.texture)
             self.vbo.bind()
@@ -119,8 +120,6 @@ class GlFrameDisplayer:
         glfw.init()
         win = glfw.create_window(W, H, "Frame Displayer", None, None)
         glfw.make_context_current(win)
-        
-        frame = imread(config["image"])
         
         frameDisplayer = GlFrameDisplayer().setTexture(videoPlayer.WIDTH, videoPlayer.HEIGHT)
         
