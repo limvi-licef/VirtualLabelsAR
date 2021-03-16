@@ -18,7 +18,7 @@ using UnityEngine.XR.WSA.Input;
 public class LabelInstantiation : MonoBehaviour
 {
     public GameObject label;
-    private float distance = 1.0f;
+    public float distance = 1.0f;
 
     public void Label_Instantiation()
     {

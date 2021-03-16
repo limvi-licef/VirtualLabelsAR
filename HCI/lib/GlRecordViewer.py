@@ -14,6 +14,9 @@ from lib.LabelManager import LabelManager
 from lib.GlFrameDisplayer import GlFrameDisplayer
 from lib.Matrix import Matrix
 from lib.MeshObject import MeshObject
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+
 
 
 ##########################################################################
@@ -25,35 +28,40 @@ class GlRecordViewer:
         
         self.initialized = False
         self.nframe = 0
+        self.labelqt = 0
+        
 
     
     ######################################################################
-    def init(self, video_dims, data, labelManager):
+    def init(self, videoSize, data, labelManager):
     
         self.frameDisplayer = GlFrameDisplayer()
-        
+        print("IIIINNNNNIIIITTTT")
         self.data = data
         self.labelManager = labelManager.init()
+
         self.projection = glm.perspective(glm.radians(28), 16/9, 0.25, 5.0)
         
         glClearColor(0.1, 0.3, 0.4, 1.0)
         glEnable(GL_DEPTH_TEST)
-    
-        w, h = video_dims
+       
+        w, h = videoSize
         self.frameDisplayer.setTexture(w, h)
         
         self.meshShader = MeshObject.getShader()
         glUseProgram(self.meshShader)
         glUniformMatrix4fv(self.meshShader.uProjection, 1, False, glm.value_ptr(self.projection))
+
+        glUseProgram(self.labelManager.shader)
+        glUniformMatrix4fv(self.labelManager.shader.uProjection, 1, False, glm.value_ptr(self.projection))
         
         self.meshes = []
         for idMesh, meshData in data["meshes"].items():
             mesh = MeshObject(meshData)
             self.meshes.append(mesh)
             
-        glUseProgram(self.labelManager.shader)
-        glUniformMatrix4fv(self.labelManager.shader.uProjection, 1, False, glm.value_ptr(self.projection))
         
+   
         self.initialized = True
         
         
@@ -70,7 +78,7 @@ class GlRecordViewer:
     def draw(self):
         
         if self.initialized:
-            
+            print("DDDDDRRRRRRRAAAAWWWWW")
             idCam = self.data["sync"][self.nframe]
             infoCam = self.data["camera"][idCam]
             
@@ -79,10 +87,8 @@ class GlRecordViewer:
             self.frameDisplayer.draw()
             
             glClear(GL_DEPTH_BUFFER_BIT)
-            
             glUseProgram(self.meshShader)
-
-            glEnable(GL_BLEND)
+            #glEnable(GL_BLEND)
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
             position = Matrix.fromList(infoCam["position"])
             rotation = Matrix.fromList(infoCam["rotation"], toTranspose=True)
@@ -90,10 +96,13 @@ class GlRecordViewer:
             glUniformMatrix4fv(self.meshShader.uModelview, 1, False, glm.value_ptr(modelview))
             for mesh in self.meshes:
                 mesh.draw(self.meshShader)
-                
+            
+            
             glUseProgram(self.labelManager.shader)
             glUniformMatrix4fv(self.labelManager.shader.uModelview, 1, False, glm.value_ptr(modelview))
+            
             self.labelManager.draw()
+            
         
         
     ######################################################################
@@ -101,31 +110,50 @@ class GlRecordViewer:
     def test(config):
         
         import time
+        import glm
+        import sys
         from lib.VideoPlayer import VideoPlayer
         from json import loads
+        from lib.QtLabelManager import QtLabelManager
+        from lib.LabelObject import LabelObject
         
         with open(config["rec_test"], mode="r") as datafile:
             data = loads(datafile.read())
-        
+        LabelObject.SHADERS = config["shaders"]
         W, H = 640, 360
         glfw.init()
         win = glfw.create_window(W, H, "Mesh Object", None, None)
         glfw.make_context_current(win)
-        
+
+        app = QtWidgets.QApplication(sys.argv)
+        root = QtWidgets.QWidget()
+        root.layout = QtWidgets.QVBoxLayout()
+        labelManager = QtLabelManager()
+        root.layout.addWidget(labelManager)
+        root.setLayout(root.layout)
+  
         videoPlayer = VideoPlayer(data["video"])
         videoPlayer.play()
-        
-        labelManager = LabelManager().init()
-        
-        label0 = labelManager.create()
-        label0.setPos((-0.1, 0.0, -1.0))
-        
-        label1 = labelManager.create()
-        label1.setPos((0.1, 0.0, -4.0))
-        
+        Manage = LabelManager()
+
+        glUseProgram(labelManager.manager.shader)
+        projection = glm.perspective(glm.radians(28), W/H, 0.25, 5.0)
+        glUniformMatrix4fv(labelManager.manager.shader.uProjection, 1, False, glm.value_ptr(projection))        
+        modelview = glm.translate(glm.mat4(), (0,0,-0.5))
+        glUniformMatrix4fv(labelManager.manager.shader.uModelview, 1, False, glm.value_ptr(modelview))
+
+        def draw():
+            
+            glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
+            labelManager.manager.draw()
+            
+            glfw.swap_buffers(win)
+            glfw.poll_events() 
+
+       
         rv = GlRecordViewer()
-        rv.init((videoPlayer.WIDTH, videoPlayer.HEIGHT), data, labelManager)
-        
+        rv.init((videoPlayer.WIDTH, videoPlayer.HEIGHT), data, Manage)
+     
         while not glfw.window_should_close(win):
             
             start = time.time()
@@ -133,17 +161,33 @@ class GlRecordViewer:
             _, frame = videoPlayer.read()
             if _: rv.receive(videoPlayer.getFrameNumber(), frame)
             
-            rv.draw()
             
+            rv.draw()
+            labelManager.manager.draw()
             glfw.swap_buffers(win)
             glfw.poll_events()
             
             tic = time.time() - start
             delay = 1/videoPlayer.FPS - tic
             if delay > 0:
-                time.sleep(delay)
-    
+               time.sleep(delay)
+            ###TESTLUCAS1
+            labelManager.timer = QtCore.QTimer()
+            #labelManager.timer.timeout.connect(draw)
+            labelManager.timer.start(int(1000/30))
+            root.setWindowTitle("QtLabelManager")
+            root.show()
+        #e = app.exec_()
         glfw.terminate()
+        #sys.exit(e)
+        
+             ###TESTLUCAS2
+            
+        
+        
+       
+        #glfw.terminate()
+
         
         
 if __name__ == "__main__":

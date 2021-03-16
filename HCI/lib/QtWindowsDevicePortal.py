@@ -131,7 +131,7 @@ class QtWindowsDevicePortal(WindowsDevicePortal, QtWidgets.QWidget):
         password = self.ui.passwordInput.text()
         
         # try connect
-        self.connect(host, auth=(login, password), certfile="resources/holocert")
+        self.connect(host, auth=(login, password), certfile="resources/certificate_HoloLens-RO2J0.cer")
         if self.isConnected():
             self._disable(True)
 
