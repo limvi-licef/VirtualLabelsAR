@@ -25,6 +25,8 @@ class LabelManager:
         self.labels = {}
         self.selected = None
         self.counter = 0
+  
+        #self.shader= LabelObject.getShader()
         
         
     ######################################################################

@@ -27,9 +27,10 @@ class LabelObject:
     def __init__(self, data=None, ID=None):
         
         self.initialized = False
-        #self._setVertices()
-        #self.initTexture()
-        
+        #########TEST########
+        self._setVertices()
+        self.initTexture()
+        #########TEST########
         if data:
             
             self.id = data["id"]

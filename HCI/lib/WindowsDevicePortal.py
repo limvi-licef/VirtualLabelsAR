@@ -41,6 +41,7 @@ class WindowsDevicePortal:
         else: self.log = lambda *args, **kwargs: None
 
 
+
     #########################################################################
     def isConnected(self):
         

@@ -8,6 +8,7 @@ from ui.Ui_RecordViewer import Ui_RecordViewer
 
 from lib.LabelObject import LabelObject
 from lib.LabelManager import LabelManager
+
 from lib.GlFrameDisplayer import GlFrameDisplayer
 from lib.Matrix import Matrix
 from lib.MeshObject import MeshObject
@@ -23,9 +24,13 @@ class QtRecordViewer(QtWidgets.QOpenGLWidget):
         
         self.rv = GlRecordViewer()
         self.a = a
+        self.ui = Ui_RecordViewer()
+        #self.ui.setupUi(self)
         
-        # self.ui.canvas.initializeGL = self.init
-        # self.paintGL = self.rv.draw
+
+        #self.ui.canvas.initializeGL = self.init
+        #self.paintGL = self.rv.draw
+
         self.receive = self.rv.receive
         
         self.timer = QtCore.QTimer()
@@ -40,19 +45,17 @@ class QtRecordViewer(QtWidgets.QOpenGLWidget):
     
     def initializeGL(self):
         
-        self.rv.init(self.a[0],self.a[1],self.a[2])
-        glClearColor(0.1, 0.3, 0.4, 1.0)
+       self.rv.init(self.a[0],self.a[1],self.a[2])
+       glClearColor(0.1, 0.3, 0.4, 1.0)
         
     
     def paintGL(self):
-        
-        self.rv.draw()
-        glFlush()
+       self.rv.draw()
+       glFlush()
         
     
     @staticmethod
     def test(config):
-        
         import sys
         from json import loads
         from lib.QtVideoPlayer import QtVideoPlayer
@@ -69,7 +72,7 @@ class QtRecordViewer(QtWidgets.QOpenGLWidget):
         
         qtVideoPlayer = QtVideoPlayer(data["video"])
         
-        w, h = qtVideoPlayer.videoPlayer.WIDTH, qtVideoPlayer.videoPlayer.HEIGHT
+        w, h = qtVideoPlayer.core.WIDTH, qtVideoPlayer.core.HEIGHT
         args = ((w,h), data, LabelManager())
         rv = QtRecordViewer(args)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)

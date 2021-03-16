@@ -6,8 +6,12 @@ from lib.QtLabelObject import QtLabelObject
 from lib.LabelManager import LabelManager
 from lib.LabelObject import LabelObject
 from ui.Ui_LabelManager import Ui_LabelManager
+from lib.QtRecordViewer import QtRecordViewer
 from numpy import ndarray
 from lib.Matrix import Matrix
+from OpenGL.GL import *
+import OpenGL.GL.shaders as shaders
+import OpenGL.arrays.vbo as vbo
         
 class QtLabelManager(QtWidgets.QWidget):
     
@@ -22,7 +26,8 @@ class QtLabelManager(QtWidgets.QWidget):
         
         
     def create(self):
-        
+        ##add canvas
+  
         self.canvas.makeCurrent()
         label = self.manager.create()
         self.ui.list.addItem(label.id)
@@ -63,6 +68,7 @@ class QtLabelManager(QtWidgets.QWidget):
         import sys
         import glfw
         import glm
+
         LabelObject.SHADERS = config["shaders"]
         
         W, H = 640, 360

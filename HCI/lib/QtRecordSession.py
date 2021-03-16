@@ -26,7 +26,7 @@ class QtRecordSession(QtWidgets.QWidget):
     def setWdp(self, wdp):
         
         self.wdp = wdp
-        self.rs = RecordSession(wdp.wdp)
+        self.rs = RecordSession(self.wdp)#(wdp.wdp)
         
         
     def start(self):

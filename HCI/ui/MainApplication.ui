@@ -6,21 +6,128 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>584</width>
-    <height>433</height>
+    <width>1105</width>
+    <height>748</height>
    </rect>
+  </property>
+  <property name="palette">
+   <palette>
+    <active>
+     <colorrole role="Base">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Window">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>85</red>
+        <green>170</green>
+        <blue>127</blue>
+       </color>
+      </brush>
+     </colorrole>
+    </active>
+    <inactive>
+     <colorrole role="Base">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Window">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>85</red>
+        <green>170</green>
+        <blue>127</blue>
+       </color>
+      </brush>
+     </colorrole>
+    </inactive>
+    <disabled>
+     <colorrole role="Base">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>85</red>
+        <green>170</green>
+        <blue>127</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Window">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>85</red>
+        <green>170</green>
+        <blue>127</blue>
+       </color>
+      </brush>
+     </colorrole>
+    </disabled>
+   </palette>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="main"/>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../icons/LogoApp.png</normaloff>../icons/LogoApp.png</iconset>
+  </property>
+  <widget class="QWidget" name="main">
+   <widget class="QLabel" name="LogoSherbrooke">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>291</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>../icons/universiteLogo.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="LogoGphy">
+    <property name="geometry">
+     <rect>
+      <x>890</x>
+      <y>530</y>
+      <width>131</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>../icons/LogoGphy.jpg</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>584</width>
-     <height>21</height>
+     <width>1105</width>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -35,16 +142,28 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionNew">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/LogoBarre.png</normaloff>../icons/LogoBarre.png</iconset>
+   </property>
    <property name="text">
     <string>New record</string>
    </property>
   </action>
   <action name="actionOpen">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/Open.jpg</normaloff>../icons/Open.jpg</iconset>
+   </property>
    <property name="text">
     <string>Open record</string>
    </property>
   </action>
   <action name="actionExit">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/Exit.jpg</normaloff>../icons/Exit.jpg</iconset>
+   </property>
    <property name="text">
     <string>Exit</string>
    </property>

@@ -40,16 +40,19 @@ class MainApplication(QtWidgets.QMainWindow):
         
         print("new")
         if self.mainWidget: self.mainWidget.deleteLater()
-        
         self.mainWidget = QtWidgets.QWidget()
         layout = QtWidgets.QVBoxLayout()
         
+        self.ui.LogoSherbrooke.setVisible(False)
+        self.ui.LogoGphy.setVisible(False)
+
         wdp = QtWindowsDevicePortal()
         layout.addWidget(wdp)
         
         recordSession = QtRecordSession()
         recordSession.setWdp(wdp)
         layout.addWidget(recordSession)
+        print(recordSession)
         
         self.mainWidget.setLayout(layout)
         self.layout.addWidget(self.mainWidget)
@@ -59,6 +62,7 @@ class MainApplication(QtWidgets.QMainWindow):
     def open(self):
         
         print("open")
+        self.ui.LogoSherbrooke.setVisible(False)
         
         file, _ = QtWidgets.QFileDialog.getOpenFileName()
         
@@ -75,9 +79,12 @@ class MainApplication(QtWidgets.QMainWindow):
         container1.setLayout(container1.layout)
         qtVideoPlayer = QtVideoPlayer(data["video"])
         qtLabelManager = QtLabelManager(self)
-        width, height = qtVideoPlayer.videoPlayer.WIDTH, qtVideoPlayer.videoPlayer.HEIGHT
+      
+        width, height = qtVideoPlayer.core.WIDTH, qtVideoPlayer.core.HEIGHT
         args = ((width, height), data, qtLabelManager.manager)
+ 
         rv = QtRecordViewer(args)
+   
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         rv.setSizePolicy(sizePolicy)
         qtVideoPlayer.frameUpdate.connect(rv.receive)
@@ -89,7 +96,10 @@ class MainApplication(QtWidgets.QMainWindow):
         container2 = QtWidgets.QWidget()
         container2.layout = QtWidgets.QVBoxLayout()
         container2.setLayout(container2.layout)
+   
         qtLabelManager.canvas = rv
+        print(qtLabelManager.canvas)
+    
         container2.layout.addWidget(qtLabelManager)
         layout.addWidget(container2)
         
@@ -144,7 +154,7 @@ if __name__ == "__main__":
     GlFrameDisplayer.SHADERS = CONFIG["shaders"]
     MeshObject.SHADERS = CONFIG["shaders"]
     LabelObject.SHADERS = CONFIG["shaders"]
-    QtRecordSession.VIDEOPATH = CONFIG["rec_video"]
+    #QtRecordSession.VIDEOPATH = CONFIG["rec_video"]
     
     MainApplication.run(CONFIG)
 
