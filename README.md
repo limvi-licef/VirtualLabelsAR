@@ -10,8 +10,10 @@ Actuellement, les fonctionnalités implémentées sont :
 - Déplacement des étiquettes sur les surfaces d'une pièce en utilisant le geste Air Tap.
 - Création d'une ancre spatiale lorsqu'une étiquette est placée, permettant ainsi aux étiquettes de conserver leur emplacement.
 - Sauvegarde des coordonnées de la caméra dans le repère du worldOrigin, dont le but sera de pouvoir ajouter des étiquettes via une vidéo sur un PC.
+- Mise en place d'un protocole Websocket avec un serveur python chargé d'envoyer un fichier JSON contenant les informations nécéssaires à la création d'étiquettes (position, rotation, contenu). Les étiquettes sont envoyées à la Hololens en utilisant la reconnaissance vocale (avec le mot clé "send labels").
+- Création des étiquettes aux coordonnées reçues par le serveur. 
 
-De nouvelles fonctionnalités seront implémentées.
+De nouvelles fonctionnalités seront implémentées (Section TODO a la fin).
 
 ## Compilation
 Pour installer ce projet, commencez par cloner ce répertoire.
@@ -27,3 +29,6 @@ Pour installer ce projet, commencez par cloner ce répertoire.
 
 ## Lancement
 L'application doit maintenant apparaitre dans la liste des applications installées du Hololens, il ne vous reste plus qu'a la lancer.
+
+### TODO
+Le serveur a pour objectif de recevoir les étiquettes envoyés par l'application bureau et de les renvoyer a l'applicationn Hololens. Il n'y a pour le moment aucun lien entre l'application bureau et le serveur. Actuellement, le serveur simule la réception des étiquettes par l'application bureau en créant un JSON contenant de fausses informations. C'est ce même JSON qui est envoyé à la Hololens.
