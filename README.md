@@ -30,5 +30,5 @@ Pour installer ce projet, commencez par cloner ce répertoire.
 ## Lancement
 L'application doit maintenant apparaitre dans la liste des applications installées du Hololens, il ne vous reste plus qu'a la lancer.
 
-### TODO
+## TODO
 Le serveur a pour objectif de recevoir les étiquettes envoyés par l'application bureau et de les renvoyer a l'applicationn Hololens. Il n'y a pour le moment aucun lien entre l'application bureau et le serveur. Actuellement, le serveur simule la réception des étiquettes par l'application bureau en créant un JSON contenant de fausses informations. C'est ce même JSON qui est envoyé à la Hololens.
