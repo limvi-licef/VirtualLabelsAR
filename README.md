@@ -13,7 +13,7 @@ Actuellement, les fonctionnalités implémentées sont :
 - Mise en place d'un protocole Websocket avec un serveur python chargé d'envoyer un fichier JSON contenant les informations nécéssaires à la création d'étiquettes (position, rotation, contenu). Les étiquettes sont envoyées à la Hololens en utilisant la reconnaissance vocale (avec le mot clé "send labels").
 - Création des étiquettes aux coordonnées reçues par le serveur. 
 
-De nouvelles fonctionnalités seront implémentées ([Section TODO](##TODO)).
+De nouvelles fonctionnalités seront implémentées ([Section TODO](#TODO)).
 
 ## Compilation
 Pour installer ce projet, commencez par cloner ce répertoire.
