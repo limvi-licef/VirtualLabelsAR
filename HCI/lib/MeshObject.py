@@ -29,7 +29,7 @@ class MeshObject:
             @arg data: list or dict, data of mesh
             @arg context: bool that indicates if OpenGL buffers should be prepared
         """
-        
+
         if type(data)==list:
             self._buildFromList(data)
         else:
@@ -46,10 +46,14 @@ class MeshObject:
             
             @arg data: list of arrays.
         """
-        
+
         self.id = data[0]
-        self.vt = np.array(data[1], dtype=np.float32)
-        self.nt = np.array(data[2], dtype=np.float32)
+        print ("_buildFromList called")
+        print (data[1])
+        #self.vt = np.array(data[1], dtype=np.float32)
+        self.vt = data[1]
+        #self.nt = np.array(data[2], dtype=np.float32)
+        self.nt = data[2]
         self.vertices = np.array(data[3], dtype=np.float32)
         self.normals = np.array(data[4], dtype=np.float32)
         self.indices = np.array(data[5], dtype=np.uint32)
@@ -63,7 +67,9 @@ class MeshObject:
             
             @arg data: dict of data.
         """
-        
+
+        print ("_buildFromDict called")
+
         self.id = data["Surface"]["SurfaceId"]
         self.vt = np.array(data["Surface"]["VertexTransform"]).reshape((4,4))
         self.nt = np.array(data["Surface"]["NormalTransform"]).reshape((4,4))
@@ -87,7 +93,8 @@ class MeshObject:
         """
             Creates buffers from arrays of data.
         """
-        
+
+        print ("prepare called")
         self.vertexTransform = glm.mat4(self.vt)
         self.normalTransform = glm.mat4(self.nt)
         self.vert_vbo = vbo.VBO(self.vertices)

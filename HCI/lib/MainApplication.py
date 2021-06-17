@@ -79,10 +79,13 @@ class MainApplication(QtWidgets.QMainWindow):
         container1.setLayout(container1.layout)
         qtVideoPlayer = QtVideoPlayer(data["video"])
         qtLabelManager = QtLabelManager(self)
-      
+
         width, height = qtVideoPlayer.core.WIDTH, qtVideoPlayer.core.HEIGHT
         args = ((width, height), data, qtLabelManager.manager)
- 
+
+        print(data["video"])
+        print(str(width) + " " + str(height))
+
         rv = QtRecordViewer(args)
    
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)

@@ -36,7 +36,7 @@ class GlRecordViewer:
     def init(self, videoSize, data, labelManager):
     
         self.frameDisplayer = GlFrameDisplayer()
-        print("IIIINNNNNIIIITTTT")
+        #print("IIIINNNNNIIIITTTT")
         self.data = data
         self.labelManager = labelManager.init()
 
@@ -78,7 +78,7 @@ class GlRecordViewer:
     def draw(self):
         
         if self.initialized:
-            print("DDDDDRRRRRRRAAAAWWWWW")
+            #print("DDDDDRRRRRRRAAAAWWWWW")
             idCam = self.data["sync"][self.nframe]
             infoCam = self.data["camera"][idCam]
             

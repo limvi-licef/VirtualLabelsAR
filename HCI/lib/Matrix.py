@@ -15,8 +15,9 @@ class Matrix:
     ############################################################
     @staticmethod
     def fromList(lst, toTranspose=False):
-        
-        mat = mat4(array(lst, dtype=float32).reshape((4,4)))
+        temp = array(lst, dtype=float32).reshape((4, 4))
+
+        mat = mat4(temp.tolist())
         
         if toTranspose: mat = transpose(mat)
         
