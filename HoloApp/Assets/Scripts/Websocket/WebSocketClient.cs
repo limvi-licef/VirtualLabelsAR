@@ -31,7 +31,7 @@ public class WebSocketClient : MonoBehaviour
         };
 
         // connection
-        ws.Connect ();
+        ws.ConnectAsync();
         Debug.Log($"Connected to {WebsocketAddress}");
     }
 
@@ -40,7 +40,7 @@ public class WebSocketClient : MonoBehaviour
     ////////////////////////////
     public void getLabels()
     {
-        ws.Send("GetLabels");
+        ws.SendAsync("GetLabels",null);
     }
 
     /////////////////////////////
