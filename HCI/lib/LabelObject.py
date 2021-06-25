@@ -12,6 +12,7 @@ import ctypes as ct
 from os.path import join
 import cv2
 from time import time
+import json
         
 
 ##########################################################################
@@ -84,8 +85,8 @@ class LabelObject:
         
     ######################################################################
     def save(self):
-        
-        return {
+        '''save self data in JSON object format'''
+        dataJSON = {
             "id": self.id,
             "info": {
                 "text": self.text,
@@ -94,6 +95,7 @@ class LabelObject:
                 },
             "position": self.position.to_list()
         }
+        return dataJSON
         
         
     ######################################################################
