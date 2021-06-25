@@ -6,6 +6,7 @@ from lib.LabelObject import LabelObject
 from ui.Ui_LabelObject import Ui_LabelObject
 from numpy import ndarray
 from lib.Matrix import Matrix
+from lib.LabelManager import LabelManager
 
         
 class QtLabelObject(QtWidgets.QWidget):
@@ -50,7 +51,8 @@ class QtLabelObject(QtWidgets.QWidget):
             pos = (self.ui.xposInput.value(), self.ui.yposInput.value(), self.ui.zposInput.value())
             orient = (self.ui.xorientInput.value(), self.ui.yorientInput.value())
             self.label.setPos(pos, orient)
-        
+
+        LabelManager.getInstance().saveToTXT()
         
     @staticmethod
     def test(config):

@@ -73,7 +73,7 @@ class QtRecordViewer(QtWidgets.QOpenGLWidget):
         qtVideoPlayer = QtVideoPlayer(data["video"])
         
         w, h = qtVideoPlayer.core.WIDTH, qtVideoPlayer.core.HEIGHT
-        args = ((w,h), data, LabelManager())
+        args = ((w,h), data, LabelManager.getInstance())
         rv = QtRecordViewer(args)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         rv.setSizePolicy(sizePolicy)

@@ -27,7 +27,7 @@ async def connection(client, path):
             print("client disconnected")
             break
 
-start_server = websockets.serve(connection, address, 80)
+start_server = websockets.serve(connection, address, 11000)
 
 print("server started");
 

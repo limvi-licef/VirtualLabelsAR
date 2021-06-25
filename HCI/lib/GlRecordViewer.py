@@ -134,7 +134,7 @@ class GlRecordViewer:
   
         videoPlayer = VideoPlayer(data["video"])
         videoPlayer.play()
-        Manage = LabelManager()
+        Manage = LabelManager.getInstance()
 
         glUseProgram(labelManager.manager.shader)
         projection = glm.perspective(glm.radians(28), W/H, 0.25, 5.0)

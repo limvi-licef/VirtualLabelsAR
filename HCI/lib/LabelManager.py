@@ -19,9 +19,23 @@ from lib.LabelObject import LabelObject
 ##########################################################################
 class LabelManager:
 
+    __instance = None
+
+    @staticmethod
+    def getInstance():
+        '''Static access to labelManager'''
+        if LabelManager.__instance == None:
+            LabelManager()
+        return LabelManager.__instance
 
     ######################################################################
     def __init__(self):
+
+        #initialize singleton
+        if LabelManager.__instance != None:
+            raise Exception("This class is a singleton.")
+        else:
+            LabelManager.__instance = self
 
         self.labels = {}
         self.selected = None
@@ -59,12 +73,11 @@ class LabelManager:
 
         self.labels[ID] = label = LabelObject(ID=ID)
 
-        self.saveToTXT("labels.txt")
+        self.saveToTXT()
 
         return label
 
-
-    def saveToTXT(self, path):
+    def saveToTXT(self, path="labels.txt"):
         """ Save labels from self in JSON string format at the path"""
 
         file = open("labels.txt", "w+") #open file on override writting mode
@@ -125,7 +138,7 @@ class LabelManager:
         win = glfw.create_window(W, H, "Label Object", None, None)
         glfw.make_context_current(win)
 
-        labelManager = LabelManager().init()
+        labelManager = LabelManager.GetInstance()
 
         label0 = labelManager.create()
         label0.setPos((-0.1, 0.0, 0.0))

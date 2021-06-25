@@ -21,7 +21,7 @@ class QtLabelManager(QtWidgets.QWidget):
         self.ui = Ui_LabelManager()
         self.ui.setupUi(self)
         
-        self.manager = LabelManager()
+        self.manager = LabelManager.getInstance()
         self.panel = None
         
         
