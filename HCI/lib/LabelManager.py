@@ -101,6 +101,7 @@ class LabelManager:
         if ID in self.labels:
             label = self.labels[ID]
             del self.labels[ID]
+            self.saveToTXT()
             return label
         else:
             return None
@@ -113,6 +114,7 @@ class LabelManager:
             ID = self.selected.id
             label = self.labels[ID]
             del self.labels[ID]
+            self.saveToTXT()
             return label
         else:
             return None
