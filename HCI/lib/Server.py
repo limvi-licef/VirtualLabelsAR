@@ -16,25 +16,29 @@ class Server:
 
     ##############################################################
     def read_labels(self, path=DEFAULT_SAVED_LABELS_PATH):
-        """Open the file labels.txt in project source folder (HCI) and return the string"""
+        """Open the file at relative path (default:'labels.txt') from project source folder (HCI) and return the string"""
 
-        print(os.path.dirname(__file__))
-        file = open(path, "r")  # open file on override reading mode
+        file = open(path, "r")  # open file reading mode
         labels = file.read();
+
         print(labels)
+
         file.close()
         return labels
 
     def run_internal(self, address=DEFAULT_IP_ADRESS, port=DEFAULT_PORT):
+        '''Run async server with address (default:'0.0.0.0') and port(default:11000). '''
         start_server = websockets.serve(self.connection, address, port)
-        self.read_labels()
 
         print("server started");
+        print("current data:")
+        self.read_labels()
 
         asyncio.get_event_loop().run_until_complete(start_server)
         asyncio.get_event_loop().run_forever()
 
     async def connection(self, client, path):
+        '''Wait for a client to send request "GetLabels" to return data from "labels.txt"'''
         print("client connected")
         while True:
             try:
