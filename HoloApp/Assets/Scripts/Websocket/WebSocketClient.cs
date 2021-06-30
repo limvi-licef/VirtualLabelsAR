@@ -46,7 +46,7 @@ public class WebSocketClient : MonoBehaviour
     /////////////////////////////
     // Instantiate label with text
     ////////////////////////////
-    private void InstantiateLabel(GameObject label, Vector3 position, Quaternion rotation, string CloseTxt, string FarTxt, long identifier)
+    private void InstantiateLabel(GameObject label, Vector3 position, Quaternion rotation, string CloseTxt, string FarTxt, string identifier)
     {
         var obj = Instantiate(label, position, rotation);
         obj.GetComponent<LabelParameters> ().SetParameters(CloseTxt, FarTxt, identifier);
@@ -63,16 +63,50 @@ public class WebSocketClient : MonoBehaviour
         }
         
         if (message != "") {
-            
-            JObject json = JObject.Parse(message);
-            Debug.Log("Labels received");
 
-            Vector3 position = new Vector3((float)json["position"][0],(float)json["position"][1],(float)json["position"][2]);
-            Vector3 orientation = new Vector3((float)json["orientation"][0],(float)json["orientation"][1],(float)json["orientation"][2]);
-            Quaternion rotation = Quaternion.LookRotation(orientation, new Vector3(0,1,0));
+            JArray labels = JArray.Parse(message);
 
-            InstantiateLabel(Label, position, rotation, (string)json["close"], (string)json["far"], (long)json["id"]);
-            
+            foreach (JObject label in labels)
+            {
+                if (label == null)
+                    return;
+
+                Matrix4x4 transform = Matrix4x4.zero;
+
+                int i = 0;
+                int j = 0;
+
+                foreach(JArray column in label["position"])
+                {
+                    if (column == null)
+                        return;
+
+                    foreach(float value in column)
+                    {
+                        transform[i, j] = value;
+                        i++;
+                    }
+                    j++;
+                    i = 0;
+
+                }
+
+                Vector3 position = transform.ExtractPosition();
+                Quaternion rotation = transform.ExtractRotation();
+
+                InstantiateLabel(Label, position, rotation, (string)label["info"]["textClose"], (string)label["info"]["textFar"], (string)label["id"]);
+            }
+
+            //OLD_CODE
+            //JObject json = JObject.Parse(message);
+            //Debug.Log("Labels received");
+
+            //Vector3 position = new Vector3((float)json["position"][0],(float)json["position"][1],(float)json["position"][2]);
+            //Vector3 orientation = new Vector3((float)json["orientation"][0],(float)json["orientation"][1],(float)json["orientation"][2]);
+            //Quaternion rotation = Quaternion.LookRotation(orientation, new Vector3(0,1,0));
+
+            //InstantiateLabel(Label, position, rotation, (string)json["close"], (string)json["far"], (long)json["id"]);
+
             message = "";
         }
     }
