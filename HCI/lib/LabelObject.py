@@ -89,7 +89,8 @@ class LabelObject:
         dataJSON = {
             "id": self.id,
             "info": {
-                "text": self.text,
+                "textClose": self.text+"close",
+                "textFar": self.text + "far",
                 "size": self.size,
                 "thick": self.thick,
                 },
