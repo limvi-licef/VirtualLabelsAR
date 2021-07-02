@@ -6,13 +6,15 @@ from lib.LabelObject import LabelObject
 from ui.Ui_LabelObject import Ui_LabelObject
 from numpy import ndarray
 from lib.Matrix import Matrix
-from lib.LabelManager import LabelManager
+#from lib.LabelManager import LabelManager
+from PyQt5.QtCore import (Qt, pyqtSignal)
 
         
 class QtLabelObject(QtWidgets.QWidget):
-    
+    s_dataUpdated = pyqtSignal()
     def __init__(self, label, parent=None):
-        
+        print ("[QtLabelObject::__init__] Called")
+
         QtWidgets.QWidget.__init__(self, parent)
         
         self.ui = Ui_LabelObject()
@@ -36,6 +38,9 @@ class QtLabelObject(QtWidgets.QWidget):
         self.ui.yorientInput.setValue(orient.y)
         
         self.allow_update = True
+
+
+        print("[QtLabelObject::__init__] End")
         
         
     def update(self):
@@ -52,7 +57,8 @@ class QtLabelObject(QtWidgets.QWidget):
             orient = (self.ui.xorientInput.value(), self.ui.yorientInput.value())
             self.label.setPos(pos, orient)
 
-        LabelManager.getInstance().saveToTXT()
+        self.s_dataUpdated.emit()
+        #LabelManager.getInstance().saveToTXT()
         
     @staticmethod
     def test(config):

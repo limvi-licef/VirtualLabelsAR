@@ -1,5 +1,5 @@
 import asyncio
-import websockets
+import websocket
 import nest_asyncio
 import json
 import time

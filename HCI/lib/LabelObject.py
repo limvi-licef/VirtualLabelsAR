@@ -26,14 +26,14 @@ class LabelObject:
     
     ######################################################################
     def __init__(self, data=None, ID=None):
-        
+        print ("[LabelObject::__init__] Called")
         self.initialized = False
         #########TEST########
-        self._setVertices()
-        self.initTexture()
+        #self._setVertices()
+        #self.initTexture()
         #########TEST########
         if data:
-            
+            print("[LabelObject::__init__] Data")
             self.id = data["id"]
             
             text, size, thick = data["info"]["text"], data["info"]["size"], data["info"]["thick"]
@@ -41,14 +41,18 @@ class LabelObject:
             self.position = glm.mat4(data["position"])
             
         else:
+            print("[LabelObject::__init__] No data")
             self.id = ID if ID else int(time()*1000)
-            self.position = glm.mat4()            
+            #self.id = ID
+            self.position = glm.mat4()
             self.setText(str(self.id))
+
+        print("[LabelObject::__init__] End")
         
        
     ######################################################################
     def _setVertices(self):
-        
+        print("[LabelObject::_setVertices] Called")
         w = 0.16 / 2
         h = 0.09 / 2
         self.vertices = np.array([
@@ -64,7 +68,8 @@ class LabelObject:
     ######################################################################
     @staticmethod
     def getShader():
-        
+        print("[LabelObject::getShader] Called")
+
         assert LabelObject.SHADERS != "", "LabelObject.SHADERS not set"
         VERTEX = join(LabelObject.SHADERS, "label.vs")
         FRAGMENT = join(LabelObject.SHADERS, "label.fs")
@@ -85,6 +90,7 @@ class LabelObject:
         
     ######################################################################
     def save(self):
+        print("[LabelObject::save] Called")
         '''save self data in JSON object format'''
         dataJSON = {
             "id": self.id,
@@ -100,7 +106,7 @@ class LabelObject:
         
     ######################################################################
     def initTexture(self):
-        
+        print("[LabelObject::initTexture] Called")
         w, h = LabelObject.WIDTH, LabelObject.HEIGHT
         
         self.texture = glGenTextures(1)
@@ -117,7 +123,7 @@ class LabelObject:
         
     ######################################################################
     def setPos(self, pos, orient=(0,0)):
-        
+        print("[LabelObject::setPos] Called")
         position = glm.mat4()
         
         position = glm.translate(position, pos)
@@ -130,7 +136,7 @@ class LabelObject:
         
     ######################################################################
     def setText(self, text, size=0.75, thick=2):
-        
+        print("[LabelObject::setText] Called")
         w, h = LabelObject.WIDTH, LabelObject.HEIGHT
         font = cv2.FONT_HERSHEY_SIMPLEX
         
@@ -147,7 +153,6 @@ class LabelObject:
            
     ######################################################################
     def draw(self, shader):
-
         if not self.initialized:
             self.initialized = True
             glUseProgram(shader)

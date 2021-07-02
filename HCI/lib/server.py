@@ -5,7 +5,7 @@ import json
 import time
 nest_asyncio.apply()
 
-address = "0.0.0.0"
+address = "192.168.0.10"
 
 def newID():
     return round(time.time() * 1000)
