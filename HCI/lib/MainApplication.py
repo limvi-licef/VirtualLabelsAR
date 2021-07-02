@@ -20,6 +20,9 @@ from lib.QtVideoPlayer import QtVideoPlayer
 from lib.QtWindowsDevicePortal import QtWindowsDevicePortal
 from ui.Ui_MainApplication import Ui_MainApplication
 from lib.LabelManager import LabelManager
+from lib.Server import Server
+
+import threading
 
 
 class MainApplication(QtWidgets.QMainWindow):
@@ -35,6 +38,9 @@ class MainApplication(QtWidgets.QMainWindow):
         
         self.layout = QtWidgets.QVBoxLayout()
         self.ui.main.setLayout(self.layout)
+
+        self.m_server = Server()
+        self.m_server.run()
         
         
     def new(self):
@@ -122,7 +128,9 @@ class MainApplication(QtWidgets.QMainWindow):
         # Loading labels - if any
         #lm = LabelManager.getInstance()
         #lm.initFromFile(pathToFile=fileinfo.dir().path() + "/labels.txt")
-        labelManager.initFromFile(pathToFile=fileinfo.dir().path() + "/labels.txt")
+        labelsFilePath = fileinfo.dir().path() + "/labels.txt"
+        labelManager.initFromFile(pathToFile=labelsFilePath)
+        self.m_server.updatePathLabelsFile(labelsFilePath)
         
     def exit(self):
         
