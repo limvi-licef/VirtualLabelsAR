@@ -4,14 +4,14 @@
 CONFIG = {}
 
 # Hololens
-CONFIG["host"] = "https://192.168.1.29"
-CONFIG["auth"] = ("anthony", "hololens")
-CONFIG["certfile"] = "resources/holocert"
+CONFIG["host"] = "<ip adress in format xxx.xxx.xxx.xxx>"
+CONFIG["auth"] = ("login", "password of device portal")
+CONFIG["certfile"] = "<path to Hololens certificate>"
 
 # Resources
-CONFIG["video"] = "resources/Bird.mp4"
-CONFIG["image"] = "resources/texture.png"
+CONFIG["video"] = ""
+CONFIG["image"] = ""
 
-# Paths
+# Paths / leave them as they are
 CONFIG["shaders"] = "shaders"
 CONFIG["icons"] = "icons"
