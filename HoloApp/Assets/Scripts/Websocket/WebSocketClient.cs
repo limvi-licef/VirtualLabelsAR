@@ -72,10 +72,8 @@ public class WebSocketClient : MonoBehaviour
                     return;
 
                 Matrix4x4 transform = Matrix4x4.zero;
-
                 int i = 0;
                 int j = 0;
-
                 foreach(JArray column in label["position"])
                 {
                     if (column == null)
@@ -91,8 +89,13 @@ public class WebSocketClient : MonoBehaviour
 
                 }
 
+                transform = MathUtilities.ConvertOpenGLToUnitySystem(transform);
+
                 Vector3 position = transform.ExtractPosition();
+
+                Debug.Log("pos:"+position);
                 Quaternion rotation = transform.ExtractRotation();
+                Debug.Log(rotation.eulerAngles);
 
                 InstantiateLabel(Label, position, rotation, (string)label["info"]["textClose"], (string)label["info"]["textFar"], (string)label["id"]);
             }

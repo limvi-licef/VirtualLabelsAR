@@ -57,3 +57,28 @@ public static class MatrixExtensions
         return scale;
     }
 }
+
+public static class MathUtilities
+{
+    /// <summary>
+    /// OpenGL coordinate system: x = right, y = up, z = in the direction of the camera (right-handed)
+    /// Unity coordinate system: x = right, y = up, z = from the direction of the camera (left-handed)
+    /// </summary>
+    /// <param name="matrix"></param>
+    /// <returns></returns>
+    public static Matrix4x4 ConvertOpenGLToUnitySystem(Matrix4x4 matrix)
+    {
+        /*Flipping z axis is equivalent to multiply Munity = Tr(P)MopenGLP
+            with P = (1  0  0  0)
+                     (0  1  0  0)
+                     (0  0 -1  0)
+                     (0  0  0  1)
+        */
+        for (int i = 0; i < 4; i++)
+        {
+            matrix[2, i] = -matrix[2, i];
+            matrix[i, 2] = -matrix[i, 2];
+        }
+        return matrix;
+    }
+}
