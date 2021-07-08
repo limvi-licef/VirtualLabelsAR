@@ -17,6 +17,7 @@ class Server:
     m_pathToLabelsFile = ""
     m_ip = ""
     m_port = 0
+    m_thread = None
 
     def __init__(self, pathToLabels = DEFAULT_SAVED_LABELS_PATH, address=DEFAULT_IP_ADRESS, port=DEFAULT_PORT):
         self.m_pathToLabelsFile = pathToLabels
@@ -49,9 +50,9 @@ class Server:
         newloop = asyncio.new_event_loop()
         start_server = websockets.serve(self.connection, self.m_ip, self.m_port, loop=newloop)
 
-        t = Thread(target=self.start_loop, args=(newloop, start_server))
-        t.start()
-        print("Server launched")
+        self.m_thread = Thread(target=self.start_loop, args=(newloop, start_server))
+        self.m_thread.start()
+        print("[Server:run] Server launched")
         time.sleep(2)
 
         # print("server started");
@@ -65,10 +66,10 @@ class Server:
         # loop.run_until_complete(start_server)
         # loop.close()
 
-        print ("Hello.")
+        #print ("Hello.")
 
-    def start (self):
-        print ("Nothing for now")
+    def stop(self):
+        self.m_thread.kill()
 
     async def connection(self, client, path):
         '''Wait for a client to send request "GetLabels" to return data from "labels.txt"'''

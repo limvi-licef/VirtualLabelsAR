@@ -134,7 +134,8 @@ class MainApplication(QtWidgets.QMainWindow):
         
     def exit(self):
         
-        print("exit")
+        print("[MainApplication:exit] Called")
+        self.m_server.stop()
         QtCore.QCoreApplication.instance().quit()
 
 
