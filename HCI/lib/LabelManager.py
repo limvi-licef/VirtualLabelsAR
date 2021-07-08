@@ -78,6 +78,9 @@ class LabelManager:
         print ("ID=" + ID + " data=" + str(data))
 
         label = LabelObject(ID=ID, data=data)
+        label.setUi()
+
+        label.s_dataUpdated.connect(self.saveToTXT)
 
         self.labels[ID] = label
 
@@ -178,8 +181,9 @@ class LabelManager:
 
         if self.selected:
             print("[LabelManager::selectLabel] Selected")
-            self.m_ui.panel = QtLabelObject(self.selected)
-            self.m_ui.panel.s_dataUpdated.connect(self.saveToTXT)
+            self.selected.setUi()
+            self.m_ui.panel = self.selected.m_ui #QtLabelObject(self.selected)
+            #self.m_ui.panel.s_dataUpdated.connect(self.saveToTXT)
             self.m_ui.ui.verticalLayout.addWidget(self.m_ui.panel)
             self.m_ui.ui.removeButton.setDisabled(False)
 

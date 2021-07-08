@@ -13,46 +13,58 @@ from os.path import join
 import cv2
 from time import time
 import json
+from lib.QtLabelObject import QtLabelObject
+from PyQt5.QtCore import (Qt, pyqtSignal, QObject)
+from lib.Matrix import Matrix
         
 
 ##########################################################################
-class LabelObject:
-    
+class LabelObject (QObject):
+    s_dataUpdated = pyqtSignal()
     
     # default label sizes
     WIDTH = 320
     HEIGHT = 180
-       
+
+    m_textClose = ""
+    m_textFar = ""
+    m_ui = None
+    m_size=-1.0
+    m_thickness = -1
+    m_render = None
     
     ######################################################################
     def __init__(self, data=None, ID=None):
         print ("[LabelObject::__init__] Called")
+
+        QObject.__init__(self)
+
         self.initialized = False
         #########TEST########
         #self._setVertices()
         #self.initTexture()
         #########TEST########
         if data:
-            print("[LabelObject::__init__] Data")
+            #print("[LabelObject::__init__] Data")
             self.id = data["id"]
             
-            text, size, thick = data["info"]["text"], data["info"]["size"], data["info"]["thick"]
-            self.setText(text, size, thick)
+            textClose, textFar, size, thick = data["info"]["textClose"], data["info"]["textFar"], data["info"]["size"], data["info"]["thick"]
+            self.setText(textClose, textFar, size, thick)
             self.position = glm.mat4(data["position"])
             
         else:
-            print("[LabelObject::__init__] No data")
+            #print("[LabelObject::__init__] No data")
             self.id = ID if ID else int(time()*1000)
             #self.id = ID
             self.position = glm.mat4()
             self.setText(str(self.id))
 
-        print("[LabelObject::__init__] End")
+        #print("[LabelObject::__init__] End")
         
        
     ######################################################################
     def _setVertices(self):
-        print("[LabelObject::_setVertices] Called")
+        #print("[LabelObject::_setVertices] Called")
         w = 0.16 / 2
         h = 0.09 / 2
         self.vertices = np.array([
@@ -95,10 +107,10 @@ class LabelObject:
         dataJSON = {
             "id": self.id,
             "info": {
-                "textClose": self.text+"close",
-                "textFar": self.text + "far",
-                "size": self.size,
-                "thick": self.thick,
+                "textClose": self.m_textClose,
+                "textFar": self.m_textFar,
+                "size": self.m_size,
+                "thick": self.m_thickness,
                 },
             "position": self.position.to_list()
         }
@@ -136,20 +148,21 @@ class LabelObject:
         
         
     ######################################################################
-    def setText(self, text, size=0.75, thick=2):
+    def setText(self, textClose, textFar, size=0.75, thick=2):
         print("[LabelObject::setText] Called")
         w, h = LabelObject.WIDTH, LabelObject.HEIGHT
         font = cv2.FONT_HERSHEY_SIMPLEX
         
-        textsize = cv2.getTextSize(text, font, size, thick)[0]
+        textsize = cv2.getTextSize(textFar, font, size, thick)[0]
         x = (w - textsize[0]) // 2
         y = (h + textsize[1]) // 2
         img = np.zeros((h, w, 3), dtype=np.uint8)
         
-        self.text = text
-        self.size = size
-        self.thick = thick
-        self.render = cv2.putText(img, text, (x,y), font, size, (255,255,255), thick)
+        self.m_textFar = textFar
+        self.m_textClose = textClose
+        self.m_size = size
+        self.m_thickness = thick
+        self.m_render = cv2.putText(img, textFar, (x,y), font, size, (255,255,255), thick)
         
            
     ######################################################################
@@ -169,7 +182,7 @@ class LabelObject:
             glActiveTexture(GL_TEXTURE0+self.texture)
             glBindTexture(GL_TEXTURE_2D, self.texture);
             glUniform1i(shader.uTexture, self.texture)
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, self.render)
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, self.m_render)
             
             glUniformMatrix4fv(shader.uPosition, 1, False, glm.value_ptr(self.position))
             
@@ -180,8 +193,46 @@ class LabelObject:
             glBindTexture(GL_TEXTURE_2D, 0);
             self.vbo.unbind()
             glUseProgram(0)
-        
-        
+
+    def setUi (self, parent=None):
+        print ("[LabelObject::setUi] Called")
+        # print("\t ID: " + self.id)
+        # print("\t Text close: " + self.m_textClose)
+        # print("\t Text far: " + self.m_textFar)
+        # print("\t Size: " + str(self.m_size))
+        # print("\t Thickness: " + str(self.m_thickness))
+        # print("\t Position: " + str(self.position))
+        # print("\t Orientation: " + str(Matrix.getRotation(self.position)))
+        self.m_ui = QtLabelObject(parent)
+        self.m_ui.ui.textCloseInput.setText(self.m_textClose)
+        self.m_ui.ui.textFarInput.setText(self.m_textFar)
+        self.m_ui.ui.sizeInput.setValue(self.m_size)
+        self.m_ui.ui.thickInput.setValue(self.m_thickness)
+
+        pos = Matrix.getTranslation(self.position)
+        orient = Matrix.getAngles(Matrix.getRotation(self.position))
+        self.m_ui.ui.xposInput.setValue(pos.x)
+        self.m_ui.ui.yposInput.setValue(pos.y)
+        self.m_ui.ui.zposInput.setValue(pos.z)
+
+        self.m_ui.ui.xorientInput.setValue(orient.x)
+        self.m_ui.ui.yorientInput.setValue(orient.y)
+
+        self.m_ui.s_guiUpdated.connect(self.updateData)
+
+    def updateData(self, textClose, textFar, size, thick, position, orientation):
+        print ("[LabelObject:updateData] Called")
+        # print("\t ID: " + self.id)
+        # print("\t Text close: " + textClose)
+        # print("\t Text far: " + textFar)
+        # print("\t Size: " + str(size))
+        # print("\t Thickness: " + str(thick))
+        # print("\t Position: " + str(position))
+        # print("\t Orientation: " + str(orientation))
+        self.setText(textClose, textFar, size, thick)
+        self.setPos(position, orientation)
+        self.s_dataUpdated.emit()
+
     ######################################################################
     @staticmethod
     def test(config):
