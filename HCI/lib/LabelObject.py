@@ -148,7 +148,7 @@ class LabelObject (QObject):
         
         
     ######################################################################
-    def setText(self, textClose, textFar, size=0.75, thick=2):
+    def setText(self, textClose="", textFar="", size=0.75, thick=2):
         print("[LabelObject::setText] Called")
         w, h = LabelObject.WIDTH, LabelObject.HEIGHT
         font = cv2.FONT_HERSHEY_SIMPLEX

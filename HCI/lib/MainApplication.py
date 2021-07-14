@@ -175,7 +175,7 @@ class MainApplication(QtWidgets.QMainWindow):
         
 if __name__ == "__main__":
     
-    from config import *
+    from config_template import *
 
     GlFrameDisplayer.SHADERS = CONFIG["shaders"]
     MeshObject.SHADERS = CONFIG["shaders"]
