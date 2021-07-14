@@ -13,6 +13,8 @@ using UnityEngine;
  * \brief Instantiate label
  * 
  * Instantiate a label using speechInputManager with "Create label" keyword.
+ * 
+ * TODO: use LabelManager to create a label and manage id conflict with labels added from Desktop App on server.
  */
 public class LabelInstantiation : MonoBehaviour
 {
