@@ -13,7 +13,7 @@ public class LabelParameters : MonoBehaviour
     public string DistantText = "Far from me";
     [Tooltip("Text displayed when you are close to the object, relative to Distance parameter")]
     public string CloseText = "Close to me";
-    private string id;
+    private int id;
 
     private Camera cam;
     private GameObject label, contentGo;
@@ -40,7 +40,7 @@ public class LabelParameters : MonoBehaviour
         }
     }
 
-    public void SetParameters(string close, string far, string identifier)
+    public void SetParameters(string close, string far, int identifier)
     {
         DistantText = far;
         CloseText = close;

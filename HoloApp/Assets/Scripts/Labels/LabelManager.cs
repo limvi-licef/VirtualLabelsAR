@@ -18,7 +18,7 @@ public class LabelManager : MonoBehaviour
         get { return sharedInstance; }
     }
 
-    private Dictionary<string, GameObject> labels;
+    private Dictionary<int, GameObject> labels;
 
 
     private void Awake()
@@ -36,7 +36,7 @@ public class LabelManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        labels = new Dictionary<string, GameObject>();
+        labels = new Dictionary<int, GameObject>();
     }
 
     // Update is called once per frame
@@ -62,7 +62,7 @@ public class LabelManager : MonoBehaviour
             return;
         }
 
-        Dictionary<string, GameObject> newLabels = new Dictionary<string, GameObject>();
+        Dictionary<int, GameObject> newLabels = new Dictionary<int, GameObject>();
 
         JArray labelsFromJSON = JArray.Parse(labelsJSON);
 
@@ -100,7 +100,7 @@ public class LabelManager : MonoBehaviour
                 Quaternion rotation = transform.ExtractRotation();
                 string textClose = (string)label["info"]["textClose"];
                 string textFar = (string)label["info"]["textFar"];
-                string id = (string)label["id"];
+                int id = (int)label["id"];
 
                 if (!labels.ContainsKey(id))
                 {
@@ -159,7 +159,7 @@ public class LabelManager : MonoBehaviour
     /////////////////////////////
     // Instantiate label with text
     ////////////////////////////
-    private GameObject InstantiateLabel(GameObject label, Vector3 position, Quaternion rotation, string CloseTxt, string FarTxt, string identifier)
+    private GameObject InstantiateLabel(GameObject label, Vector3 position, Quaternion rotation, string closeTxt, string farTxt, int identifier)
     {
         if (label == null)
         {
@@ -170,7 +170,7 @@ public class LabelManager : MonoBehaviour
         var obj = Instantiate(label, position, rotation);
         if (obj != null)
         {
-            obj.GetComponent<LabelParameters>()?.SetParameters(CloseTxt, FarTxt, identifier);
+            obj.GetComponent<LabelParameters>()?.SetParameters(closeTxt, farTxt, identifier);
         }
         return obj;
     }

@@ -50,7 +50,6 @@ class LabelManager:
     def init(self):
         print("[LabelManager::init] Called")
         self.shader = LabelObject.getShader()
-
         return self
 
     ######################################################################
@@ -69,22 +68,23 @@ class LabelManager:
     #return LabelObject
     def create(self, data=None):
         print("[LabelManager::create] Called")
+        labelID = self.counter
         if data is None:
-            ID = f"Label_{self.counter}"
-            while ID in self.labels:
+
+            while labelID in self.labels:
                 self.counter += 1
-                ID = f"Label_{self.counter}"
+                labelID = self.counter
         else:
-            ID = data["id"]
+            labelID = data["id"]
 
-        print ("ID=" + ID + " data=" + str(data))
+        print ("ID=" + str(labelID) + " data=" + str(data))
 
-        label = LabelObject(ID=ID, data=data)
+        label = LabelObject(ID=labelID, data=data)
         label.setUi()
 
         label.s_dataUpdated.connect(self.saveToTXT)
 
-        self.labels[ID] = label
+        self.labels[labelID] = label
 
         self.saveToTXT()
 
@@ -110,12 +110,13 @@ class LabelManager:
 
 
     ######################################################################
-    def remove(self, ID):
+    def remove(self, labelID):
         print("[LabelManager::remove] Called")
-        if ID in self.labels:
-            label = self.labels[ID]
-            del self.labels[ID]
+        if labelID in self.labels:
+            label = self.labels[labelID]
+            del self.labels[labelID]
             self.saveToTXT()
+            self.counter = min(self.counter, int(labelID))
             return label
         else:
             return None
@@ -125,11 +126,12 @@ class LabelManager:
     def removeSelected(self):
         print("[LabelManager::removeSelected] Called")
         if self.selected:
-            ID = self.selected.id
-            label = self.labels[ID]
-            del self.labels[ID]
-            self.saveToTXT()
-            return label
+            self.remove(self.selected.id)
+            # ID = self.selected.id
+            # label = self.labels[ID]
+            # del self.labels[ID]
+            # self.saveToTXT()
+            # return label
         else:
             return None
 
@@ -177,7 +179,7 @@ class LabelManager:
     def selectLabel(self, labelId):
         print("[LabelManager::selectLabel] Called")
 
-        self.select(labelId)
+        self.select(int(labelId))
 
         if self.m_ui.panel: self.m_ui.panel.deleteLater()
 

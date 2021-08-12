@@ -76,7 +76,7 @@ class QtLabelManager(QtWidgets.QWidget):
         print("[QtLabelManager::addLabelToGui] Called")
         print (label.id)
         self.canvas.makeCurrent()
-        self.ui.list.addItem(label.id)
+        self.ui.list.addItem(str(label.id))
         
     @staticmethod
     def test(config):

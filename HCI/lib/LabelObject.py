@@ -54,7 +54,7 @@ class LabelObject (QObject):
             
         else:
             #print("[LabelObject::__init__] No data")
-            self.id = ID if ID else int(time()*1000)
+            self.id = ID if ID is not None else int(time()*1000)
             #self.id = ID
             self.position = glm.mat4()
             self.setText(str(self.id))

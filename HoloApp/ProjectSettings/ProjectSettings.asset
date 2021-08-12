@@ -599,11 +599,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: HololensApp
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: Assets\WSATestCertificate.pfx
+  metroCertificatePath: Assets/WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: DefaultCompany
-  metroCertificateIssuer: DefaultCompany
-  metroCertificateNotAfter: 0023a4e49a80d701
+  metroCertificateSubject: limvi.licef
+  metroCertificateIssuer: limvi.licef
+  metroCertificateNotAfter: 8049d3b2b3aed801
   metroApplicationDescription: Template_3D
   wsaImages: {}
   metroTileShortName: 
@@ -634,7 +634,7 @@ PlayerSettings:
       HumanInterfaceDevice: False
       InputInjectionBrokered: False
       InternetClient: True
-      InternetClientServer: False
+      InternetClientServer: True
       Location: False
       LowLevelDevices: False
       Microphone: True
@@ -645,7 +645,7 @@ PlayerSettings:
       PhoneCallHistoryPublic: False
       PicturesLibrary: False
       PointOfService: False
-      PrivateNetworkClientServer: False
+      PrivateNetworkClientServer: True
       Proximity: False
       RecordedCallsFolder: False
       RemoteSystem: False
