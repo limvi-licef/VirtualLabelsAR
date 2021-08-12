@@ -69,11 +69,13 @@ class LabelManager:
     #return LabelObject
     def create(self, data=None):
         print("[LabelManager::create] Called")
-
-        ID = f"Label_{self.counter}"
-        while ID in self.labels:
-            self.counter += 1
+        if data is None:
             ID = f"Label_{self.counter}"
+            while ID in self.labels:
+                self.counter += 1
+                ID = f"Label_{self.counter}"
+        else:
+            ID = data["id"]
 
         print ("ID=" + ID + " data=" + str(data))
 
