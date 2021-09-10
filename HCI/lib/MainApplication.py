@@ -13,13 +13,13 @@ from PyQt5 import QtCore, QtWidgets
 from lib.GlFrameDisplayer import GlFrameDisplayer
 from lib.LabelObject import LabelObject
 from lib.MeshObject import MeshObject
-from lib.QtLabelManager import QtLabelManager
 from lib.QtRecordSession import QtRecordSession
 from lib.QtRecordViewer import QtRecordViewer
 from lib.QtVideoPlayer import QtVideoPlayer
 from lib.QtWindowsDevicePortal import QtWindowsDevicePortal
 from ui.Ui_MainApplication import Ui_MainApplication
 from lib.LabelManager import LabelManager
+from lib.CameraManager import CameraManager
 from lib.Server import Server
 
 import threading
@@ -86,6 +86,7 @@ class MainApplication(QtWidgets.QMainWindow):
         container1.layout = QtWidgets.QVBoxLayout()
         container1.setLayout(container1.layout)
         qtVideoPlayer = QtVideoPlayer(fileinfo.dir().path() + "/" + data["video"])
+        cameraManager = CameraManager(data)
         #qtLabelManager = QtLabelManager(self)
         labelManager = LabelManager()
         qtLabelManager = labelManager.setUI(parent=self)
@@ -96,7 +97,7 @@ class MainApplication(QtWidgets.QMainWindow):
         width, height = qtVideoPlayer.core.WIDTH, qtVideoPlayer.core.HEIGHT
         #args = ((width, height), data, qtLabelManager.manager)
         #args = ((width, height), data, LabelManager.getInstance())
-        args = ((width, height), data, labelManager)
+        args = ((width, height), data, labelManager, cameraManager)
 
         print(data["video"])
         print(str(width) + " " + str(height))

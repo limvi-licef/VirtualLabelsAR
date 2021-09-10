@@ -9,86 +9,77 @@ import glfw
 import glm
 import ctypes as ct
 from os.path import join
-from lib.LabelObject import LabelObject
 from lib.LabelManager import LabelManager
+from lib.CameraManager import CameraManager
 from lib.GlFrameDisplayer import GlFrameDisplayer
 from lib.Matrix import Matrix
 from lib.MeshObject import MeshObject
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-
-
 ##########################################################################
 class GlRecordViewer:
-    
-    
+
     ######################################################################
     def __init__(self):
-        
+
         self.initialized = False
         self.nframe = 0
         self.labelqt = 0
-        
 
-    
     ######################################################################
-    def init(self, videoSize, data, labelManager):
-    
+    def init(self, videoSize, data, labelManager, cameraManager):
+
         self.frameDisplayer = GlFrameDisplayer()
-        #print("IIIINNNNNIIIITTTT")
+        # print("IIIINNNNNIIIITTTT")
         self.data = data
         self.labelManager = labelManager.init()
+        self.cameraManager = cameraManager.init()
 
-        self.projection = glm.perspective(glm.radians(28), 16/9, 0.25, 5.0)
-        
+        self.projection = glm.perspective(glm.radians(28), 16 / 9, 0.25, 5.0)
+
         glClearColor(0.1, 0.3, 0.4, 1.0)
         glEnable(GL_DEPTH_TEST)
-       
+
         w, h = videoSize
         self.frameDisplayer.setTexture(w, h)
-        
+
         self.meshShader = MeshObject.getShader()
         glUseProgram(self.meshShader)
         glUniformMatrix4fv(self.meshShader.uProjection, 1, False, glm.value_ptr(self.projection))
 
         glUseProgram(self.labelManager.shader)
         glUniformMatrix4fv(self.labelManager.shader.uProjection, 1, False, glm.value_ptr(self.projection))
-        
+
         self.meshes = []
         for idMesh, meshData in data["meshes"].items():
             mesh = MeshObject(meshData)
             self.meshes.append(mesh)
-            
-        
-   
+
         self.initialized = True
-        
-        
+
     ######################################################################
     def receive(self, nframe, frame):
-        
+
         if self.initialized and self.frameDisplayer:
-            
             self.nframe = nframe if nframe < len(self.data["sync"]) else len(self.data["sync"]) - 1
             self.frameDisplayer.receive(frame)
-        
-    
+
     ######################################################################
     def draw(self):
-        
+
         if self.initialized:
-            #print("DDDDDRRRRRRRAAAAWWWWW")
+            # print("DDDDDRRRRRRRAAAAWWWWW")
             idCam = self.data["sync"][self.nframe]
             infoCam = self.data["camera"][idCam]
-            
+
             glClear(GL_COLOR_BUFFER_BIT)
-            
+
             self.frameDisplayer.draw()
-            
+
             glClear(GL_DEPTH_BUFFER_BIT)
             glUseProgram(self.meshShader)
-            #glEnable(GL_BLEND)
+            # glEnable(GL_BLEND)
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
             position = Matrix.fromList(infoCam["position"])
             rotation = Matrix.fromList(infoCam["rotation"], toTranspose=True)
@@ -96,19 +87,20 @@ class GlRecordViewer:
             glUniformMatrix4fv(self.meshShader.uModelview, 1, False, glm.value_ptr(modelview))
             for mesh in self.meshes:
                 mesh.draw(self.meshShader)
-            
-            
+
+            CameraManager.m_currentTimestamp = infoCam["time"]
+            #LabelObject.cameraTranslation = glm.mat4(Matrix.fromList(infoCam["position"]))
+            #LabelObject.cameraRotation = glm.mat4(Matrix.fromList(infoCam["rotation"]))
+
             glUseProgram(self.labelManager.shader)
             glUniformMatrix4fv(self.labelManager.shader.uModelview, 1, False, glm.value_ptr(modelview))
-            
+
             self.labelManager.draw()
-            
-        
-        
+
     ######################################################################
     @staticmethod
     def test(config):
-        
+
         import time
         import glm
         import sys
@@ -116,7 +108,7 @@ class GlRecordViewer:
         from json import loads
         from lib.QtLabelManager import QtLabelManager
         from lib.LabelObject import LabelObject
-        
+
         with open(config["rec_test"], mode="r") as datafile:
             data = loads(datafile.read())
         LabelObject.SHADERS = config["shaders"]
@@ -131,72 +123,64 @@ class GlRecordViewer:
         labelManager = QtLabelManager()
         root.layout.addWidget(labelManager)
         root.setLayout(root.layout)
-  
+
         videoPlayer = VideoPlayer(data["video"])
         videoPlayer.play()
-        Manage = LabelManager.getInstance()
+        Manage = LabelManager()
 
         glUseProgram(labelManager.manager.shader)
-        projection = glm.perspective(glm.radians(28), W/H, 0.25, 5.0)
-        glUniformMatrix4fv(labelManager.manager.shader.uProjection, 1, False, glm.value_ptr(projection))        
-        modelview = glm.translate(glm.mat4(), (0,0,-0.5))
+        projection = glm.perspective(glm.radians(28), W / H, 0.25, 5.0)
+        glUniformMatrix4fv(labelManager.manager.shader.uProjection, 1, False, glm.value_ptr(projection))
+        modelview = glm.translate(glm.mat4(), (0, 0, -0.5))
         glUniformMatrix4fv(labelManager.manager.shader.uModelview, 1, False, glm.value_ptr(modelview))
 
         def draw():
-            
-            glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
-            labelManager.manager.draw()
-            
-            glfw.swap_buffers(win)
-            glfw.poll_events() 
 
-       
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+            labelManager.manager.draw()
+
+            glfw.swap_buffers(win)
+            glfw.poll_events()
+
         rv = GlRecordViewer()
         rv.init((videoPlayer.WIDTH, videoPlayer.HEIGHT), data, Manage)
-     
+
         while not glfw.window_should_close(win):
-            
+
             start = time.time()
-            
+
             _, frame = videoPlayer.read()
             if _: rv.receive(videoPlayer.getFrameNumber(), frame)
-            
-            
+
             rv.draw()
             labelManager.manager.draw()
             glfw.swap_buffers(win)
             glfw.poll_events()
-            
+
             tic = time.time() - start
-            delay = 1/videoPlayer.FPS - tic
+            delay = 1 / videoPlayer.FPS - tic
             if delay > 0:
-               time.sleep(delay)
+                time.sleep(delay)
             ###TESTLUCAS1
             labelManager.timer = QtCore.QTimer()
-            #labelManager.timer.timeout.connect(draw)
-            labelManager.timer.start(int(1000/30))
+            # labelManager.timer.timeout.connect(draw)
+            labelManager.timer.start(int(1000 / 30))
             root.setWindowTitle("QtLabelManager")
             root.show()
-        #e = app.exec_()
+        # e = app.exec_()
         glfw.terminate()
-        #sys.exit(e)
-        
-             ###TESTLUCAS2
-            
-        
-        
-       
-        #glfw.terminate()
+        # sys.exit(e)
 
-        
-        
+        ###TESTLUCAS2
+
+        # glfw.terminate()
+
+
 if __name__ == "__main__":
-    
     from config import *
-    
+
     GlFrameDisplayer.SHADERS = CONFIG["shaders"]
     MeshObject.SHADERS = CONFIG["shaders"]
     LabelObject.SHADERS = CONFIG["shaders"]
-    
+
     GlRecordViewer.test(CONFIG)
-        
