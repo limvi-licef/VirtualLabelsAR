@@ -45,7 +45,7 @@ class QtRecordViewer(QtWidgets.QOpenGLWidget):
     
     def initializeGL(self):
         
-       self.rv.init(self.a[0],self.a[1],self.a[2])
+       self.rv.init(self.a[0],self.a[1],self.a[2],self.a[3])
        glClearColor(0.1, 0.3, 0.4, 1.0)
         
     

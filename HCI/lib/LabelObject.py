@@ -13,6 +13,8 @@ from os.path import join
 import cv2
 from time import time
 import json
+
+from lib.CameraManager import CameraManager
 from lib.QtLabelObject import QtLabelObject
 from PyQt5.QtCore import (Qt, pyqtSignal, QObject)
 from lib.Matrix import Matrix
@@ -32,9 +34,12 @@ class LabelObject (QObject):
     m_size=-1.0
     m_thickness = -1
     m_render = None
+
+    # cameraTranslation = glm.mat4()
+    #cameraRotation = glm.mat4()
     
     ######################################################################
-    def __init__(self, data=None, ID=None):
+    def __init__(self, data=None, ID=None, timestamp=0):
         print ("[LabelObject::__init__] Called")
 
         QObject.__init__(self)
@@ -47,19 +52,26 @@ class LabelObject (QObject):
         if data:
             #print("[LabelObject::__init__] Data")
             self.id = data["id"]
+            self.timestamp = data["timestamp"]
             
             textClose, textFar, size, thick = data["info"]["textClose"], data["info"]["textFar"], data["info"]["size"], data["info"]["thick"]
             self.setText(textClose, textFar, size, thick)
-            self.position = glm.mat4(data["position"])
+            self.positionSetting = CameraManager.getPositionSetting(glm.mat4(data["position"]),data["timestamp"]) #Position set by the users (in cameraRef)
+            self.position = glm.mat4(data["position"]) #Position in world coordinate
             
         else:
             #print("[LabelObject::__init__] No data")
             self.id = ID if ID is not None else int(time()*1000)
+            self.timestamp = timestamp
             #self.id = ID
-            self.position = glm.mat4()
+            self.positionSetting = glm.mat4() #Position set by the users (in cameraRef)
+            self.position = CameraManager.calculateRealPosition(self.positionSetting, self.timestamp) #Position in world coordinate
             self.setText(str(self.id))
 
         #print("[LabelObject::__init__] End")
+
+        self.cameraTranslation = glm.mat4()
+        self.cameraRotation = glm.mat4()
         
        
     ######################################################################
@@ -106,6 +118,7 @@ class LabelObject (QObject):
         '''save self data in JSON object format'''
         dataJSON = {
             "id": self.id,
+            "timestamp": self.timestamp,
             "info": {
                 "textClose": self.m_textClose,
                 "textFar": self.m_textFar,
@@ -137,14 +150,16 @@ class LabelObject (QObject):
     ######################################################################
     def setPos(self, pos, orient=(0,0)):
         print("[LabelObject::setPos] Called")
-        position = glm.mat4()
+
+        position = glm.mat4();
         
         position = glm.translate(position, pos)
         
         position = glm.rotate(position, glm.radians(orient[1]), (0,1,0))
         position = glm.rotate(position, glm.radians(orient[0]), (1,0,0))            
             
-        self.position = position
+        self.positionSetting = position
+        self.position = CameraManager.calculateRealPosition(self.positionSetting,self.timestamp)
         
         
     ######################################################################
@@ -209,8 +224,8 @@ class LabelObject (QObject):
         self.m_ui.ui.sizeInput.setValue(self.m_size)
         self.m_ui.ui.thickInput.setValue(self.m_thickness)
 
-        pos = Matrix.getTranslation(self.position)
-        orient = Matrix.getAngles(Matrix.getRotation(self.position))
+        pos = Matrix.getTranslation(self.positionSetting)
+        orient = Matrix.getAngles(Matrix.getRotation(self.positionSetting))
         self.m_ui.ui.xposInput.setValue(pos.x)
         self.m_ui.ui.yposInput.setValue(pos.y)
         self.m_ui.ui.zposInput.setValue(pos.z)
@@ -232,6 +247,7 @@ class LabelObject (QObject):
         self.setText(textClose, textFar, size, thick)
         self.setPos(position, orientation)
         self.s_dataUpdated.emit()
+
 
     ######################################################################
     @staticmethod

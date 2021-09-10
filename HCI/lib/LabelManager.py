@@ -11,6 +11,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import (Qt, pyqtSignal)
 
+from lib.CameraManager import CameraManager
 from lib.LabelObject import LabelObject
 from lib.QtLabelManager import QtLabelManager
 from lib.QtLabelObject import QtLabelObject
@@ -70,6 +71,7 @@ class LabelManager:
     def create(self, data=None):
         print("[LabelManager::create] Called")
         labelID = self.counter
+        timestamp = CameraManager.m_currentTimestamp
         if data is None:
 
             while labelID in self.labels:
@@ -77,10 +79,11 @@ class LabelManager:
                 labelID = self.counter
         else:
             labelID = data["id"]
+            timestamp = data["timestamp"]
 
-        print ("ID=" + str(labelID) + " data=" + str(data))
+        print ("ID=" + str(labelID) + " data=" + str(data) + "timestamp= " +str(timestamp))
 
-        label = LabelObject(ID=labelID, data=data)
+        label = LabelObject(ID=labelID, data=data, timestamp=timestamp)
         label.setUi()
 
         label.s_dataUpdated.connect(self.saveToTXT)
@@ -219,7 +222,7 @@ class LabelManager:
     def test(config):
 
         import time
-        LabelObject.SHADERS = config["shaders"]
+        lib.LabelObject.LabelObject.SHADERS = config["shaders"]
 
         W, H = 640, 360
         glfw.init()
