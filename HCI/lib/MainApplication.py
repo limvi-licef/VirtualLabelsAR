@@ -21,6 +21,7 @@ from lib.QtWindowsDevicePortal import QtWindowsDevicePortal
 from ui.Ui_MainApplication import Ui_MainApplication
 from lib.LabelManager import LabelManager
 from lib.Server import Server
+import os
 
 import threading
 
@@ -89,7 +90,7 @@ class MainApplication(QtWidgets.QMainWindow):
         #qtLabelManager = QtLabelManager(self)
         labelManager = LabelManager()
         qtLabelManager = labelManager.setUI(parent=self)
-        labelManager.setDirectoryFilePath(fileinfo.dir().path())
+        #labelManager.setDirectoryFilePath(fileinfo.dir().path())
         #qtLabelManager = LabelManager.getInstance().setUI(parent = self)
         #LabelManager.getInstance().setDirectoryFilePath(fileinfo.dir().path())
 
@@ -128,8 +129,11 @@ class MainApplication(QtWidgets.QMainWindow):
         # Loading labels - if any
         #lm = LabelManager.getInstance()
         #lm.initFromFile(pathToFile=fileinfo.dir().path() + "/labels.txt")
-        labelsFilePath = fileinfo.dir().path() + "/labels.txt"
-        labelManager.initFromFile(pathToFile=labelsFilePath)
+        baseFilePathForLabelsFile = os.path.splitext(fileinfo.filePath())[0] # Get the filepath without the extension
+        print ("File to open: " + baseFilePathForLabelsFile)
+        labelsFilePath = baseFilePathForLabelsFile + ".labels"
+        #labelsFilePath = fileinfo.dir().path() + "/labels.txt"
+        labelManager.initFromFile(pathToFile=labelsFilePath) # REPRENDRE ICI, le fichier des labels ne s'enregistre pas avec le nouveau nom.
         self.m_server.updatePathLabelsFile(labelsFilePath)
         
     def exit(self):

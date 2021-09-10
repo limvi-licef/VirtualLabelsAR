@@ -15,6 +15,7 @@ from lib.LabelObject import LabelObject
 from lib.QtLabelManager import QtLabelManager
 from lib.QtLabelObject import QtLabelObject
 
+import os
 
 ##########################################################################
 class LabelManager:
@@ -41,7 +42,7 @@ class LabelManager:
         self.selected = None
         self.counter = 0
         self.m_ui = None
-        self.m_directoryFilePath = ""
+        self.m_pathToFile = ""
 
         #self.shader= Lab   elObject.getShader()
 
@@ -94,7 +95,8 @@ class LabelManager:
         print("[LabelManager::saveToTXT] Called")
         """ Save labels from self in JSON string format at the path"""
 
-        file = open(self.m_directoryFilePath + "/labels.txt", "w+") #open file on override writting mode
+        #file = open(self.m_directoryFilePath + "/labels.txt", "w+") #open file on override writting mode
+        file = open(self.m_pathToFile, "w+")  # open file on override writting mode
         dataJSON = json.dumps(self.save())
         file.write(dataJSON)
         file.close()
@@ -144,7 +146,8 @@ class LabelManager:
 
     def initFromFile(self, pathToFile):
         print ("[LabelManager::initFromFile] Called")
-        print (pathToFile)
+        self.m_pathToFile = pathToFile
+        print("Path to file: " + self.m_pathToFile)
 
         try:
             f = open(pathToFile, "r")
@@ -156,9 +159,9 @@ class LabelManager:
                 label = self.create(data=l)
                 self.m_ui.addLabelToGui(label)
         except FileNotFoundError as e:
-            print ("[LabelManager::initFromFile] No labels files")
+            print ("[LabelManager::initFromFile] Info - No labels files")
         except ValueError as e:
-            print("[LabelManager::initFromFile] Nothing to read: continue")
+            print("[LabelManager::initFromFile] Info - Nothing to read")
 
 
     #@pyqtSlot()
@@ -208,8 +211,8 @@ class LabelManager:
         print("[LabelManager::setUI] End")
         return self.m_ui
 
-    def setDirectoryFilePath(self, filePath):
-        self.m_directoryFilePath = filePath
+    #def setDirectoryFilePath(self, filePath):
+    #    self.m_directoryFilePath = filePath
 
     ######################################################################
     @staticmethod
