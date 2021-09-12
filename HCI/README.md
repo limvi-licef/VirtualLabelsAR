@@ -6,7 +6,7 @@ In the HCI directory, run install.bat.
 
 Incase the virtual environment virtual_labels_ar is not yet active, run the following command: conda activate virtual_labels_ar
 
-open the file config.py, and set the following information:
+copy the config_template.py to config.py and open it. Set the following information:
 - CONFIG["host"]: ip of the Hololens (both the PC and the Hololens must be in the same network)
 - CONFIG["auth"]: login and password you use to connect to the device portal
 - CONFIG["certfile"]: path to the certificate you use to connect to the device portal. If you do not have it, you can follow the steps of this section : https://docs.microsoft.com/en-us/windows/mixed-reality/develop/platform-capabilities-and-apis/using-the-windows-device-portal
