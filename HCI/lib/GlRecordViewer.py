@@ -10,7 +10,7 @@ import glm
 import ctypes as ct
 from os.path import join
 from lib.LabelManager import LabelManager
-from lib.CameraManager import CameraManager
+from lib.DataManager import DataManager
 from lib.GlFrameDisplayer import GlFrameDisplayer
 from lib.Matrix import Matrix
 from lib.MeshObject import MeshObject
@@ -28,13 +28,13 @@ class GlRecordViewer:
         self.labelqt = 0
 
     ######################################################################
-    def init(self, videoSize, data, labelManager, cameraManager):
+    def init(self, videoSize, labelManager, dataManager):
 
         self.frameDisplayer = GlFrameDisplayer()
         # print("IIIINNNNNIIIITTTT")
-        self.data = data
-        self.labelManager = labelManager.init()
-        self.cameraManager = cameraManager.init()
+        #self.data = data
+        self.m_labelManager = labelManager.init()
+        self.m_dataManager = dataManager.init()
 
         self.projection = glm.perspective(glm.radians(28), 16 / 9, 0.25, 5.0)
 
@@ -48,13 +48,14 @@ class GlRecordViewer:
         glUseProgram(self.meshShader)
         glUniformMatrix4fv(self.meshShader.uProjection, 1, False, glm.value_ptr(self.projection))
 
-        glUseProgram(self.labelManager.shader)
-        glUniformMatrix4fv(self.labelManager.shader.uProjection, 1, False, glm.value_ptr(self.projection))
+        glUseProgram(self.m_labelManager.shader)
+        glUniformMatrix4fv(self.m_labelManager.shader.uProjection, 1, False, glm.value_ptr(self.projection))
 
-        self.meshes = []
-        for idMesh, meshData in data["meshes"].items():
-            mesh = MeshObject(meshData)
-            self.meshes.append(mesh)
+        # Moved to DataManager
+        #self.meshes = []
+        #for idMesh, meshData in data["meshes"].items():
+        #    mesh = MeshObject(meshData)
+        #    self.meshes.append(mesh)
 
         self.initialized = True
 
@@ -62,7 +63,8 @@ class GlRecordViewer:
     def receive(self, nframe, frame):
 
         if self.initialized and self.frameDisplayer:
-            self.nframe = nframe if nframe < len(self.data["sync"]) else len(self.data["sync"]) - 1
+            #self.nframe = nframe if nframe < len(self.data["sync"]) else len(self.data["sync"]) - 1
+            self.nframe = nframe if nframe < len(self.m_dataManager.getSync()) else len(self.m_dataManager.getSync()) - 1
             self.frameDisplayer.receive(frame)
 
     ######################################################################
@@ -70,8 +72,10 @@ class GlRecordViewer:
 
         if self.initialized:
             # print("DDDDDRRRRRRRAAAAWWWWW")
-            idCam = self.data["sync"][self.nframe]
-            infoCam = self.data["camera"][idCam]
+            #idCam = self.data["sync"][self.nframe]
+            idCam = self.m_dataManager.getSync()[self.nframe]
+            #infoCam = self.data["camera"][idCam]
+            infoCam = self.m_dataManager.getCameraInfo()[idCam]
 
             glClear(GL_COLOR_BUFFER_BIT)
 
@@ -85,17 +89,21 @@ class GlRecordViewer:
             rotation = Matrix.fromList(infoCam["rotation"], toTranspose=True)
             modelview = rotation * position
             glUniformMatrix4fv(self.meshShader.uModelview, 1, False, glm.value_ptr(modelview))
-            for mesh in self.meshes:
+            for mesh in self.m_dataManager.getMesh():
                 mesh.draw(self.meshShader)
+            #for mesh in self.meshes:
+            #    mesh.draw(self.meshShader)
 
-            CameraManager.m_currentTimestamp = infoCam["time"]
+            #DataManager.m_currentTimestamp = infoCam["time"]
+            self.m_dataManager.setTimeStamp(infoCam["time"])
+
             #LabelObject.cameraTranslation = glm.mat4(Matrix.fromList(infoCam["position"]))
             #LabelObject.cameraRotation = glm.mat4(Matrix.fromList(infoCam["rotation"]))
 
-            glUseProgram(self.labelManager.shader)
-            glUniformMatrix4fv(self.labelManager.shader.uModelview, 1, False, glm.value_ptr(modelview))
+            glUseProgram(self.m_labelManager.shader)
+            glUniformMatrix4fv(self.m_labelManager.shader.uModelview, 1, False, glm.value_ptr(modelview))
 
-            self.labelManager.draw()
+            self.m_labelManager.draw()
 
     ######################################################################
     @staticmethod

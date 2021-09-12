@@ -37,7 +37,7 @@ class Server:
         return labels
 
     def updatePathLabelsFile (self, path):
-        print("[Server::updatePathLabelsFile] Called")
+        #print("[Server::updatePathLabelsFile] Called")
         self.m_pathToLabelsFile = path
 
     def start_loop(self, loop, server):
@@ -73,7 +73,7 @@ class Server:
 
     async def connection(self, client, path):
         '''Wait for a client to send request "GetLabels" to return data from "labels.txt"'''
-        print("[Server:connection] Called - client connected")
+        #print("[Server:connection] Called - client connected")
         while True:
             try:
                 message = await client.recv()

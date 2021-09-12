@@ -19,7 +19,7 @@ from lib.QtVideoPlayer import QtVideoPlayer
 from lib.QtWindowsDevicePortal import QtWindowsDevicePortal
 from ui.Ui_MainApplication import Ui_MainApplication
 from lib.LabelManager import LabelManager
-from lib.CameraManager import CameraManager
+from lib.DataManager import DataManager
 from lib.Server import Server
 import os
 
@@ -69,7 +69,7 @@ class MainApplication(QtWidgets.QMainWindow):
         
     def open(self):
         
-        print("[MainApplication::open] Called")
+        #print("[MainApplication::open] Called")
         self.ui.LogoSherbrooke.setVisible(False)
         
         file, _ = QtWidgets.QFileDialog.getOpenFileName()
@@ -87,9 +87,9 @@ class MainApplication(QtWidgets.QMainWindow):
         container1.layout = QtWidgets.QVBoxLayout()
         container1.setLayout(container1.layout)
         qtVideoPlayer = QtVideoPlayer(fileinfo.dir().path() + "/" + data["video"])
-        cameraManager = CameraManager(data)
+        dataManager = DataManager(data)
         #qtLabelManager = QtLabelManager(self)
-        labelManager = LabelManager()
+        labelManager = LabelManager(dataManager)
         qtLabelManager = labelManager.setUI(parent=self)
         #labelManager.setDirectoryFilePath(fileinfo.dir().path())
         #qtLabelManager = LabelManager.getInstance().setUI(parent = self)
@@ -98,12 +98,12 @@ class MainApplication(QtWidgets.QMainWindow):
         width, height = qtVideoPlayer.core.WIDTH, qtVideoPlayer.core.HEIGHT
         #args = ((width, height), data, qtLabelManager.manager)
         #args = ((width, height), data, LabelManager.getInstance())
-        args = ((width, height), data, labelManager, cameraManager)
+        #args = ((width, height), data, labelManager, cameraManager)
 
         print(data["video"])
         print(str(width) + " " + str(height))
 
-        rv = QtRecordViewer(args)
+        rv = QtRecordViewer(width, height, labelManager, dataManager)
 
         # UI building
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
@@ -174,7 +174,7 @@ class MainApplication(QtWidgets.QMainWindow):
         app = QtWidgets.QApplication(sys.argv)
         GlobalFrame = MainApplication()
         GlobalFrame.show()
-        print ("[MainApplication::run] Exiting application")
+        #print ("[MainApplication::run] Exiting application")
         sys.exit(app.exec_())
         
         

@@ -11,7 +11,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import (Qt, pyqtSignal)
 
-from lib.CameraManager import CameraManager
+from lib.DataManager import DataManager
 from lib.LabelObject import LabelObject
 from lib.QtLabelManager import QtLabelManager
 from lib.QtLabelObject import QtLabelObject
@@ -31,8 +31,8 @@ class LabelManager:
     #    return LabelManager.__instance
 
     ######################################################################
-    def __init__(self):
-        print("[LabelManager::__init__] Called")
+    def __init__(self, dataManager):
+        #print("[LabelManager::__init__] Called")
         #initialize singleton
         # if LabelManager.__instance != None:
         #     raise Exception("This class is a singleton.")
@@ -44,19 +44,20 @@ class LabelManager:
         self.counter = 0
         self.m_ui = None
         self.m_pathToFile = ""
+        self.m_dataManager = dataManager
 
         #self.shader= Lab   elObject.getShader()
 
 
     ######################################################################
     def init(self):
-        print("[LabelManager::init] Called")
+        #print("[LabelManager::init] Called")
         self.shader = LabelObject.getShader()
         return self
 
     ######################################################################
     def save(self):
-        print("[LabelManager::save] Called")
+        #print("[LabelManager::save] Called")
         '''Save labels in JSON object format'''
         dataJSON = []
 
@@ -68,22 +69,26 @@ class LabelManager:
 
     ######################################################################
     #return LabelObject
-    def create(self, data=None):
-        print("[LabelManager::create] Called")
+    def create(self, labelData=None):
+        #print("[LabelManager::create] Called")
         labelID = self.counter
-        timestamp = CameraManager.m_currentTimestamp
-        if data is None:
+        #timestamp = DataManager.m_currentTimestamp
+        #timestamp = self.m_dataManager.getCurrentTimestamp()
 
+        if labelData is None:
+            timestamp = self.m_dataManager.getCurrentTimestamp()
             while labelID in self.labels:
                 self.counter += 1
                 labelID = self.counter
         else:
-            labelID = data["id"]
-            timestamp = data["timestamp"]
+            labelID = labelData["id"]
+            timestamp = labelData["timestamp"]
 
-        print ("ID=" + str(labelID) + " data=" + str(data) + "timestamp= " +str(timestamp))
+        #print ("ID=" + str(labelID) + " data=" + str(data) + "timestamp= " +str(timestamp))
 
-        label = LabelObject(ID=labelID, data=data, timestamp=timestamp)
+        label = LabelObject(ID=labelID, labelData=labelData, dataManager=self.m_dataManager, timestamp=timestamp)
+        #label = LabelObject(ID=labelID, labelData=labelData, timestamp=timestamp)
+        #label = LabelObject(ID=labelID, dataManager=self.m_dataManager)
         label.setUi()
 
         label.s_dataUpdated.connect(self.saveToTXT)
@@ -95,7 +100,7 @@ class LabelManager:
         return label
 
     def saveToTXT(self, path="labels.txt"):
-        print("[LabelManager::saveToTXT] Called")
+        #print("[LabelManager::saveToTXT] Called")
         """ Save labels from self in JSON string format at the path"""
 
         #file = open(self.m_directoryFilePath + "/labels.txt", "w+") #open file on override writting mode
@@ -107,7 +112,7 @@ class LabelManager:
 
     ######################################################################
     def select(self, ID):
-        print("[LabelManager::select] Called")
+        #print("[LabelManager::select] Called")
         if ID in self.labels:
             self.selected = self.labels[ID]
         else:
@@ -116,7 +121,7 @@ class LabelManager:
 
     ######################################################################
     def remove(self, labelID):
-        print("[LabelManager::remove] Called")
+        #print("[LabelManager::remove] Called")
         if labelID in self.labels:
             label = self.labels[labelID]
             del self.labels[labelID]
@@ -129,7 +134,7 @@ class LabelManager:
 
     ######################################################################
     def removeSelected(self):
-        print("[LabelManager::removeSelected] Called")
+        #print("[LabelManager::removeSelected] Called")
         if self.selected:
             self.remove(self.selected.id)
             # ID = self.selected.id
@@ -148,9 +153,9 @@ class LabelManager:
             label.draw(self.shader)
 
     def initFromFile(self, pathToFile):
-        print ("[LabelManager::initFromFile] Called")
+        #print ("[LabelManager::initFromFile] Called")
         self.m_pathToFile = pathToFile
-        print("Path to file: " + self.m_pathToFile)
+        #print("Path to file: " + self.m_pathToFile)
 
         try:
             f = open(pathToFile, "r")
@@ -159,7 +164,8 @@ class LabelManager:
             print(labelsRaw)
             for l in labelsRaw:
                 print(l)
-                label = self.create(data=l)
+                label = self.create(labelData=l)
+                #label = self.create()
                 self.m_ui.addLabelToGui(label)
         except FileNotFoundError as e:
             print ("[LabelManager::initFromFile] Info - No labels files")
@@ -169,7 +175,7 @@ class LabelManager:
 
     #@pyqtSlot()
     def removeLabel(self):
-        print("[LabelManager::removeLabel] Called")
+        #print("[LabelManager::removeLabel] Called")
         if self.selected:
             for item in self.m_ui.ui.list.selectedItems():
                 row = self.m_ui.ui.list.row(item)
@@ -183,14 +189,14 @@ class LabelManager:
             self.m_ui.panel = None
 
     def selectLabel(self, labelId):
-        print("[LabelManager::selectLabel] Called")
+        #print("[LabelManager::selectLabel] Called")
 
         self.select(int(labelId))
 
         if self.m_ui.panel: self.m_ui.panel.deleteLater()
 
         if self.selected:
-            print("[LabelManager::selectLabel] Selected")
+            #print("[LabelManager::selectLabel] Selected")
             self.selected.setUi()
             self.m_ui.panel = self.selected.m_ui #QtLabelObject(self.selected)
             #self.m_ui.panel.s_dataUpdated.connect(self.saveToTXT)
@@ -198,20 +204,20 @@ class LabelManager:
             self.m_ui.ui.removeButton.setDisabled(False)
 
     def createLabel(self):
-        print("[LabelManager::createLabel] Called")
+        #print("[LabelManager::createLabel] Called")
         label = self.create()
         self.m_ui.addLabelToGui(label)
 
 
 
     def setUI (self, parent):
-        print ("[LabelManager::setUI] Called")
+        #print ("[LabelManager::setUI] Called")
         self.m_ui = QtLabelManager(parent)
         #QObject.connect(self.m_ui, SIGNAL("s_remove()"), self.removeLabel())
         self.m_ui.s_remove.connect(self.removeLabel)
         self.m_ui.s_select.connect(self.selectLabel)
         self.m_ui.s_create.connect(self.createLabel)
-        print("[LabelManager::setUI] End")
+        #print("[LabelManager::setUI] End")
         return self.m_ui
 
     #def setDirectoryFilePath(self, filePath):

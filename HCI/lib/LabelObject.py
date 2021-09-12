@@ -14,7 +14,7 @@ import cv2
 from time import time
 import json
 
-from lib.CameraManager import CameraManager
+from lib.DataManager import DataManager
 from lib.QtLabelObject import QtLabelObject
 from PyQt5.QtCore import (Qt, pyqtSignal, QObject)
 from lib.Matrix import Matrix
@@ -34,39 +34,75 @@ class LabelObject (QObject):
     m_size=-1.0
     m_thickness = -1
     m_render = None
+    m_dataManager = None
 
     # cameraTranslation = glm.mat4()
     #cameraRotation = glm.mat4()
     
     ######################################################################
-    def __init__(self, data=None, ID=None, timestamp=0):
-        print ("[LabelObject::__init__] Called")
+    #def __init__(self, ID=None, timestamp=0):
+    def __init__(self, ID=None, labelData = None, dataManager = None, timestamp=0 ):
+        #print ("[LabelObject::__init__] Called")
 
         QObject.__init__(self)
+
+        self.m_dataManager = dataManager
 
         self.initialized = False
         #########TEST########
         #self._setVertices()
         #self.initTexture()
         #########TEST########
-        if data:
+        # New version were data is migrated to DataManager
+        # self.id = ID if ID is not None else int(time() * 1000)
+        # #self.timestamp = timestamp
+        # self.timestamp = dataManager.getCurrentTimestamp()
+        # self.positionSetting = glm.mat4() #Position set by the users (in cameraRef)
+        # #self.position = DataManager.calculateRealPosition(self.positionSetting, self.timestamp) #Position in world coordinate
+        # self.position = dataManager.calculateRealPosition(self.positionSetting, self.timestamp)  # Position in world coordinate
+        # self.setText(str(self.id))
+
+        # Version before migrating DataManager to data
+        if labelData:
             #print("[LabelObject::__init__] Data")
-            self.id = data["id"]
-            self.timestamp = data["timestamp"]
-            
-            textClose, textFar, size, thick = data["info"]["textClose"], data["info"]["textFar"], data["info"]["size"], data["info"]["thick"]
+            self.id = labelData["id"]
+            self.timestamp = labelData["timestamp"]
+
+            textClose, textFar, size, thick = labelData["info"]["textClose"], labelData["info"]["textFar"], labelData["info"]["size"], labelData["info"]["thick"]
             self.setText(textClose, textFar, size, thick)
-            self.positionSetting = CameraManager.getPositionSetting(glm.mat4(data["position"]),data["timestamp"]) #Position set by the users (in cameraRef)
-            self.position = glm.mat4(data["position"]) #Position in world coordinate
-            
+            #self.positionSetting = DataManager.getPositionSetting(glm.mat4(labelData["position"]), labelData["timestamp"]) #Position set by the users (in cameraRef)
+            self.positionSetting = dataManager.getPositionSetting(glm.mat4(labelData["position"]), labelData[
+                "timestamp"])  # Position set by the users (in cameraRef)
+            self.position = glm.mat4(labelData["position"]) #Position in world coordinate
+
         else:
             #print("[LabelObject::__init__] No data")
             self.id = ID if ID is not None else int(time()*1000)
             self.timestamp = timestamp
             #self.id = ID
             self.positionSetting = glm.mat4() #Position set by the users (in cameraRef)
-            self.position = CameraManager.calculateRealPosition(self.positionSetting, self.timestamp) #Position in world coordinate
+            self.position = dataManager.calculateRealPosition(self.positionSetting, self.timestamp) #Position in world coordinate
             self.setText(str(self.id))
+
+        # Version before migrating DataManager to data
+        # if data:
+        #     #print("[LabelObject::__init__] Data")
+        #     self.id = data["id"]
+        #     self.timestamp = data["timestamp"]
+        #
+        #     textClose, textFar, size, thick = data["info"]["textClose"], data["info"]["textFar"], data["info"]["size"], data["info"]["thick"]
+        #     self.setText(textClose, textFar, size, thick)
+        #     self.positionSetting = DataManager.getPositionSetting(glm.mat4(data["position"]), data["timestamp"]) #Position set by the users (in cameraRef)
+        #     self.position = glm.mat4(data["position"]) #Position in world coordinate
+        #
+        # else:
+        #     #print("[LabelObject::__init__] No data")
+        #     self.id = ID if ID is not None else int(time()*1000)
+        #     self.timestamp = timestamp
+        #     #self.id = ID
+        #     self.positionSetting = glm.mat4() #Position set by the users (in cameraRef)
+        #     self.position = DataManager.calculateRealPosition(self.positionSetting, self.timestamp) #Position in world coordinate
+        #     self.setText(str(self.id))
 
         #print("[LabelObject::__init__] End")
 
@@ -92,7 +128,7 @@ class LabelObject (QObject):
     ######################################################################
     @staticmethod
     def getShader():
-        print("[LabelObject::getShader] Called")
+        #print("[LabelObject::getShader] Called")
 
         assert LabelObject.SHADERS != "", "LabelObject.SHADERS not set"
         VERTEX = join(LabelObject.SHADERS, "label.vs")
@@ -114,7 +150,7 @@ class LabelObject (QObject):
         
     ######################################################################
     def save(self):
-        print("[LabelObject::save] Called")
+        #print("[LabelObject::save] Called")
         '''save self data in JSON object format'''
         dataJSON = {
             "id": self.id,
@@ -132,7 +168,7 @@ class LabelObject (QObject):
         
     ######################################################################
     def initTexture(self):
-        print("[LabelObject::initTexture] Called")
+        #print("[LabelObject::initTexture] Called")
         w, h = LabelObject.WIDTH, LabelObject.HEIGHT
         
         self.texture = glGenTextures(1)
@@ -149,7 +185,7 @@ class LabelObject (QObject):
         
     ######################################################################
     def setPos(self, pos, orient=(0,0)):
-        print("[LabelObject::setPos] Called")
+        #print("[LabelObject::setPos] Called")
 
         position = glm.mat4();
         
@@ -159,12 +195,13 @@ class LabelObject (QObject):
         position = glm.rotate(position, glm.radians(orient[0]), (1,0,0))            
             
         self.positionSetting = position
-        self.position = CameraManager.calculateRealPosition(self.positionSetting,self.timestamp)
+        #self.position = DataManager.calculateRealPosition(self.positionSetting, self.timestamp)
+        self.position = self.m_dataManager.calculateRealPosition(self.positionSetting, self.timestamp)
         
         
     ######################################################################
     def setText(self, textClose="", textFar="", size=0.75, thick=2):
-        print("[LabelObject::setText] Called")
+        print("[LabelObject::setText] Called - textFar: " + textFar)
         w, h = LabelObject.WIDTH, LabelObject.HEIGHT
         font = cv2.FONT_HERSHEY_SIMPLEX
         
@@ -210,7 +247,7 @@ class LabelObject (QObject):
             glUseProgram(0)
 
     def setUi (self, parent=None):
-        print ("[LabelObject::setUi] Called")
+        #print ("[LabelObject::setUi] Called")
         # print("\t ID: " + self.id)
         # print("\t Text close: " + self.m_textClose)
         # print("\t Text far: " + self.m_textFar)

@@ -73,8 +73,8 @@ class QtLabelManager(QtWidgets.QWidget):
             
         
     def addLabelToGui (self, label):
-        print("[QtLabelManager::addLabelToGui] Called")
-        print (label.id)
+        #print("[QtLabelManager::addLabelToGui] Called")
+        #print (label.id)
         self.canvas.makeCurrent()
         self.ui.list.addItem(str(label.id))
         

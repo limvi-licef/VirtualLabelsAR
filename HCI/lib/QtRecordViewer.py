@@ -18,20 +18,24 @@ from OpenGL.GL import *
 class QtRecordViewer(QtWidgets.QOpenGLWidget):
     
     
-    def __init__(self, a, parent=None):
+    #def __init__(self, a, parent=None):
+    def __init__(self, videoWidth, videoHeight, labelManager, dataManager, parent=None):
         
         QtWidgets.QOpenGLWidget.__init__(self, parent)
         
-        self.rv = GlRecordViewer()
-        self.a = a
-        self.ui = Ui_RecordViewer()
+        self.m_recordViewer = GlRecordViewer()
+        self.m_videoWidth = videoWidth
+        self.m_videoHeight = videoHeight
+        self.m_labelManager = labelManager
+        self.m_dataManager = dataManager
+        self.m_recordViewerUi = Ui_RecordViewer()
         #self.ui.setupUi(self)
         
 
         #self.ui.canvas.initializeGL = self.init
         #self.paintGL = self.rv.draw
 
-        self.receive = self.rv.receive
+        self.receive = self.m_recordViewer.receive
         
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update)
@@ -45,12 +49,13 @@ class QtRecordViewer(QtWidgets.QOpenGLWidget):
     
     def initializeGL(self):
         
-       self.rv.init(self.a[0],self.a[1],self.a[2],self.a[3])
+       #self.m_recordViewer.init(self.a[0], self.a[1], self.a[2], self.a[3])
+       self.m_recordViewer.init((self.m_videoWidth, self.m_videoHeight), self.m_labelManager, self.m_dataManager)
        glClearColor(0.1, 0.3, 0.4, 1.0)
         
     
     def paintGL(self):
-       self.rv.draw()
+       self.m_recordViewer.draw()
        glFlush()
         
     

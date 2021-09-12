@@ -17,7 +17,7 @@ class QtLabelObject(QtWidgets.QWidget):
     s_guiUpdated = pyqtSignal(str, str, float, int, tuple, tuple)
 
     def __init__(self, parent=None):
-        print ("[QtLabelObject::__init__] Called")
+        #print ("[QtLabelObject::__init__] Called")
 
         QtWidgets.QWidget.__init__(self, parent)
         
@@ -46,15 +46,15 @@ class QtLabelObject(QtWidgets.QWidget):
         self.allow_update = True
 
 
-        print("[QtLabelObject::__init__] End")
+        #print("[QtLabelObject::__init__] End")
         
         
     def update(self):
-        print("[QtLabelObject:update] Called")
+        #print("[QtLabelObject:update] Called")
         QtWidgets.QWidget.update(self)
         
         if self.allow_update:
-            print("[QtLabelObject:update] allow update")
+            #print("[QtLabelObject:update] allow update")
             #text = self.ui.textInput.text()
             textClose = self.ui.textCloseInput.text()
             textFar = self.ui.textFarInput.text()
