@@ -14,6 +14,7 @@ from ui.Ui_WindowsDevicePortal import Ui_WindowsDevicePortal
 from lib.WindowsDevicePortal import WindowsDevicePortal
 from lib.Matrix import Matrix
 
+from config import *
 
 ###########################################################################
 class QtWindowsDevicePortal(WindowsDevicePortal, QtWidgets.QWidget):
@@ -38,6 +39,9 @@ class QtWindowsDevicePortal(WindowsDevicePortal, QtWidgets.QWidget):
         # setup ui
         self.ui = Ui_WindowsDevicePortal()
         self.ui.setupUi(self)
+        self.ui.hostInput.setText(CONFIG["host"])
+        self.ui.loginInput.setText(CONFIG["auth"][0])
+        self.ui.passwordInput.setText(CONFIG["auth"][1])
         
         # prepare timers and set preview state
         self._initTimers()

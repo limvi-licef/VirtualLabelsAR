@@ -18,15 +18,17 @@ from lib.DataManager import DataManager
 from lib.QtLabelObject import QtLabelObject
 from PyQt5.QtCore import (Qt, pyqtSignal, QObject)
 from lib.Matrix import Matrix
-        
+
+from config import *
 
 ##########################################################################
 class LabelObject (QObject):
     s_dataUpdated = pyqtSignal()
     
     # default label sizes
-    WIDTH = 320
-    HEIGHT = 180
+    m_width = 320
+    m_height = 180
+    SHADERS = CONFIG["shaders"]
 
     m_textClose = ""
     m_textFar = ""
@@ -169,7 +171,7 @@ class LabelObject (QObject):
     ######################################################################
     def initTexture(self):
         #print("[LabelObject::initTexture] Called")
-        w, h = LabelObject.WIDTH, LabelObject.HEIGHT
+        w, h = LabelObject.m_width, LabelObject.m_height
         
         self.texture = glGenTextures(1)
         glActiveTexture(GL_TEXTURE0+self.texture)
@@ -202,7 +204,7 @@ class LabelObject (QObject):
     ######################################################################
     def setText(self, textClose="", textFar="", size=0.75, thick=2):
         print("[LabelObject::setText] Called - textFar: " + textFar)
-        w, h = LabelObject.WIDTH, LabelObject.HEIGHT
+        w, h = LabelObject.m_width, LabelObject.m_height
         font = cv2.FONT_HERSHEY_SIMPLEX
         
         textsize = cv2.getTextSize(textFar, font, size, thick)[0]
@@ -226,7 +228,7 @@ class LabelObject (QObject):
             self.initTexture()
 
         else:
-            w, h = LabelObject.WIDTH, LabelObject.HEIGHT
+            w, h = LabelObject.m_width, LabelObject.m_height
             
             glUseProgram(shader)
             self.vbo.bind()

@@ -180,12 +180,15 @@ class MainApplication(QtWidgets.QMainWindow):
         
 if __name__ == "__main__":
     
-    from config_template import *
+    #from config_template import *
+    from config import *
 
     GlFrameDisplayer.SHADERS = CONFIG["shaders"]
     MeshObject.SHADERS = CONFIG["shaders"]
-    LabelObject.SHADERS = CONFIG["shaders"]
+    #LabelObject.SHADERS = CONFIG["shaders"]
     #QtRecordSession.VIDEOPATH = CONFIG["rec_video"]
-    
+
+    print(CONFIG)
+
     MainApplication.run(CONFIG)
 
