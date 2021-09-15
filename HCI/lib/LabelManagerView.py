@@ -2,7 +2,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from lib.QtLabelObject import QtLabelObject
+from lib.LabelObjectView import LabelObjectView
 #from lib.LabelManager import LabelManager
 from lib.LabelObject import LabelObject
 from ui.Ui_LabelManager import Ui_LabelManager
@@ -14,7 +14,7 @@ import OpenGL.GL.shaders as shaders
 import OpenGL.arrays.vbo as vbo
 from PyQt5.QtCore import (Qt, pyqtSignal)
         
-class QtLabelManager(QtWidgets.QWidget):
+class LabelManagerView(QtWidgets.QWidget):
     s_remove = pyqtSignal()
     s_select = pyqtSignal(str)
     s_create = pyqtSignal()
@@ -43,7 +43,7 @@ class QtLabelManager(QtWidgets.QWidget):
         
         
     def remove(self):
-        print("[QtLabelManager::remove] Called")
+        print("[LabelManagerView::remove] Called")
         self.s_remove.emit()
 
         # if self.manager.selected:
@@ -97,7 +97,7 @@ class QtLabelManager(QtWidgets.QWidget):
         root = QtWidgets.QWidget()
         root.layout = QtWidgets.QVBoxLayout()
         
-        labelManager = QtLabelManager()
+        labelManager = LabelManagerView()
         root.layout.addWidget(labelManager)
         root.setLayout(root.layout)
         
@@ -139,4 +139,4 @@ if __name__ == "__main__":
     from compiler import *
     from OpenGL.GL import *
     
-    QtLabelManager.test(CONFIG)
+    LabelManagerView.test(CONFIG)

@@ -42,6 +42,10 @@ class QtWindowsDevicePortal(WindowsDevicePortal, QtWidgets.QWidget):
         self.ui.hostInput.setText(CONFIG["host"])
         self.ui.loginInput.setText(CONFIG["auth"][0])
         self.ui.passwordInput.setText(CONFIG["auth"][1])
+
+        # Preview is currently not used, so hidden for the user. Code remains here as it might be useful later
+        self.ui.previewButton.setVisible(False)
+        self.ui.previewLabel.setVisible(False)
         
         # prepare timers and set preview state
         self._initTimers()
@@ -159,16 +163,16 @@ class QtWindowsDevicePortal(WindowsDevicePortal, QtWidgets.QWidget):
             self.previewTimer.stop()
             self.ui.previewInfo.setText("")
 
-
-    #######################################################################
-    def activatePreview(self):
-        
-        """
-            Activate the preview.
-        """
-        
-        if not self.previewOn:
-            self.togglePreview()
+    # This function does not seem to be used in the project
+    # #######################################################################
+    # def activatePreview(self):
+    #
+    #     """
+    #         Activate the preview.
+    #     """
+    #
+    #     if not self.previewOn:
+    #         self.togglePreview()
 
 
     #######################################################################

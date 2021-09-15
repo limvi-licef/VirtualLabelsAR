@@ -23,11 +23,13 @@ class QtRecordViewer(QtWidgets.QOpenGLWidget):
         
         QtWidgets.QOpenGLWidget.__init__(self, parent)
         
-        self.m_recordViewer = GlRecordViewer()
+        #self.m_recordViewer = GlRecordViewer()
         self.m_videoWidth = videoWidth
         self.m_videoHeight = videoHeight
         self.m_labelManager = labelManager
         self.m_dataManager = dataManager
+
+        self.m_recordViewer = GlRecordViewer((self.m_videoWidth, self.m_videoHeight), self.m_labelManager, self.m_dataManager)
         self.m_recordViewerUi = Ui_RecordViewer()
         #self.ui.setupUi(self)
         
@@ -50,7 +52,10 @@ class QtRecordViewer(QtWidgets.QOpenGLWidget):
     def initializeGL(self):
         
        #self.m_recordViewer.init(self.a[0], self.a[1], self.a[2], self.a[3])
-       self.m_recordViewer.init((self.m_videoWidth, self.m_videoHeight), self.m_labelManager, self.m_dataManager)
+       #self.m_recordViewer.init((self.m_videoWidth, self.m_videoHeight), self.m_labelManager, self.m_dataManager)
+
+       self.m_recordViewer.initializeGl()
+
        glClearColor(0.1, 0.3, 0.4, 1.0)
         
     

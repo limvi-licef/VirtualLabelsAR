@@ -13,8 +13,8 @@ from PyQt5.QtCore import (Qt, pyqtSignal)
 
 from lib.DataManager import DataManager
 from lib.LabelObject import LabelObject
-from lib.QtLabelManager import QtLabelManager
-from lib.QtLabelObject import QtLabelObject
+from lib.LabelManagerView import LabelManagerView
+from lib.LabelObjectView import LabelObjectView
 
 import os
 
@@ -46,11 +46,11 @@ class LabelManager:
         self.m_pathToFile = ""
         self.m_dataManager = dataManager
 
-        #self.shader= Lab   elObject.getShader()
+        #self.shader= LabelObject.getShader()
 
 
     ######################################################################
-    def init(self):
+    def initializeGl(self):
         #print("[LabelManager::init] Called")
         self.shader = LabelObject.getShader()
         return self
@@ -111,39 +111,39 @@ class LabelManager:
 
 
     ######################################################################
-    def select(self, ID):
-        #print("[LabelManager::select] Called")
-        if ID in self.labels:
-            self.selected = self.labels[ID]
-        else:
-            self.selected = None
+    # def select(self, ID):
+    #     #print("[LabelManager::select] Called")
+    #     if ID in self.labels:
+    #         self.selected = self.labels[ID]
+    #     else:
+    #         self.selected = None
 
 
     ######################################################################
-    def remove(self, labelID):
-        #print("[LabelManager::remove] Called")
-        if labelID in self.labels:
-            label = self.labels[labelID]
-            del self.labels[labelID]
-            self.saveToTXT()
-            self.counter = min(self.counter, int(labelID))
-            return label
-        else:
-            return None
+    # def remove(self, labelID):
+    #     print("[LabelManager::remove] Called")
+    #     if labelID in self.labels:
+    #         label = self.labels[labelID]
+    #         del self.labels[labelID]
+    #         self.saveToTXT()
+    #         self.counter = min(self.counter, int(labelID))
+    #         return label
+    #     else:
+    #         return None
 
 
-    ######################################################################
-    def removeSelected(self):
-        #print("[LabelManager::removeSelected] Called")
-        if self.selected:
-            self.remove(self.selected.id)
-            # ID = self.selected.id
-            # label = self.labels[ID]
-            # del self.labels[ID]
-            # self.saveToTXT()
-            # return label
-        else:
-            return None
+    # ######################################################################
+    # def removeSelected(self):
+    #     #print("[LabelManager::removeSelected] Called")
+    #     if self.selected:
+    #         self.remove(self.selected.id)
+    #         # ID = self.selected.id
+    #         # label = self.labels[ID]
+    #         # del self.labels[ID]
+    #         # self.saveToTXT()
+    #         # return label
+    #     else:
+    #         return None
 
 
     ######################################################################
@@ -175,13 +175,20 @@ class LabelManager:
 
     #@pyqtSlot()
     def removeLabel(self):
-        #print("[LabelManager::removeLabel] Called")
+        print("[LabelManager::removeLabel] Called")
         if self.selected:
             for item in self.m_ui.ui.list.selectedItems():
                 row = self.m_ui.ui.list.row(item)
                 self.m_ui.ui.list.takeItem(row)
 
-            self.removeSelected()
+            #self.removeSelected()
+            # The function above is not used only here, so the code is copy pasted here:
+            if self.selected.id in self.labels:
+                label = self.labels[self.selected.id]
+                del self.labels[self.selected.id]
+                self.saveToTXT()
+                self.counter = min(self.counter, int(self.selected.id))
+
             self.m_ui.ui.list.clearSelection()
             self.m_ui.panel.deleteLater()
             self.m_ui.ui.removeButton.setDisabled(True)
@@ -191,7 +198,12 @@ class LabelManager:
     def selectLabel(self, labelId):
         #print("[LabelManager::selectLabel] Called")
 
-        self.select(int(labelId))
+        #self.select(int(labelId))
+        # As the "select" function is not used anymore, its code is copy pasted below:
+        if int(labelId) in self.labels:
+            self.selected = self.labels[int(labelId)]
+        else:
+            self.selected = None
 
         if self.m_ui.panel: self.m_ui.panel.deleteLater()
 
@@ -208,11 +220,15 @@ class LabelManager:
         label = self.create()
         self.m_ui.addLabelToGui(label)
 
+    def updateLabelPos(self, labelId, pos, orient):
+        self.labels[int(labelId)].setPos(pos, orient)
 
+    def updateLabelText(self, labelId, textClose, textFar, size, thick):
+        self.labels[int(labelId)].setText(labelId, textClose, textFar, size, thick)
 
     def setUI (self, parent):
         #print ("[LabelManager::setUI] Called")
-        self.m_ui = QtLabelManager(parent)
+        self.m_ui = LabelManagerView(parent)
         #QObject.connect(self.m_ui, SIGNAL("s_remove()"), self.removeLabel())
         self.m_ui.s_remove.connect(self.removeLabel)
         self.m_ui.s_select.connect(self.selectLabel)
@@ -224,65 +240,65 @@ class LabelManager:
     #    self.m_directoryFilePath = filePath
 
     ######################################################################
-    @staticmethod
-    def test(config):
-
-        import time
-        lib.LabelObject.LabelObject.SHADERS = config["shaders"]
-
-        W, H = 640, 360
-        glfw.init()
-        win = glfw.create_window(W, H, "Label Object", None, None)
-        glfw.make_context_current(win)
-
-        labelManager = LabelManager.GetInstance()
-
-        label0 = labelManager.create()
-        label0.setPos((-0.1, 0.0, 0.0))
-
-        label1 = labelManager.create()
-        label1.setPos((0.1, 0.0, 0.0))
-
-        glUseProgram(labelManager.shader)
-        projection = glm.perspective(glm.radians(28), W/H, 0.25, 5.0)
-        glUniformMatrix4fv(labelManager.shader.uProjection, 1, False, glm.value_ptr(projection))
-        modelview = glm.translate(glm.mat4(), (0,0,-0.5))
-        glUniformMatrix4fv(labelManager.shader.uModelview, 1, False, glm.value_ptr(modelview))
-
-        glClearColor(0.1, 0.3, 0.4, 1.0)
-        glEnable(GL_DEPTH_TEST)
-        while not glfw.window_should_close(win):
-
-            start = time.time()
-
-            if glfw.get_key(win, glfw.KEY_1):
-                labelManager.select("Label_0")
-            elif glfw.get_key(win, glfw.KEY_2):
-                labelManager.select("Label_1")
-            elif glfw.get_key(win, glfw.KEY_3):
-                labelManager.select("Label_2")
-
-            label0.setText("1")
-            label1.setText("2")
-            if labelManager.selected:
-                labelManager.selected.setText("Selected")
-
-            glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
-            labelManager.draw()
-
-            glfw.swap_buffers(win)
-            glfw.poll_events()
-
-            tic = time.time() - start
-            delay = 1/30 - tic
-            if delay > 0:
-                time.sleep(delay)
-
-        glfw.terminate()
-
-
-if __name__ == "__main__":
-
-    from config import *
-
-    LabelManager.test(CONFIG)
+#     @staticmethod
+#     def test(config):
+#
+#         import time
+#         lib.LabelObject.LabelObject.SHADERS = config["shaders"]
+#
+#         W, H = 640, 360
+#         glfw.init()
+#         win = glfw.create_window(W, H, "Label Object", None, None)
+#         glfw.make_context_current(win)
+#
+#         labelManager = LabelManager.GetInstance()
+#
+#         label0 = labelManager.create()
+#         label0.setPos((-0.1, 0.0, 0.0))
+#
+#         label1 = labelManager.create()
+#         label1.setPos((0.1, 0.0, 0.0))
+#
+#         glUseProgram(labelManager.shader)
+#         projection = glm.perspective(glm.radians(28), W/H, 0.25, 5.0)
+#         glUniformMatrix4fv(labelManager.shader.uProjection, 1, False, glm.value_ptr(projection))
+#         modelview = glm.translate(glm.mat4(), (0,0,-0.5))
+#         glUniformMatrix4fv(labelManager.shader.uModelview, 1, False, glm.value_ptr(modelview))
+#
+#         glClearColor(0.1, 0.3, 0.4, 1.0)
+#         glEnable(GL_DEPTH_TEST)
+#         while not glfw.window_should_close(win):
+#
+#             start = time.time()
+#
+#             if glfw.get_key(win, glfw.KEY_1):
+#                 labelManager.select("Label_0")
+#             elif glfw.get_key(win, glfw.KEY_2):
+#                 labelManager.select("Label_1")
+#             elif glfw.get_key(win, glfw.KEY_3):
+#                 labelManager.select("Label_2")
+#
+#             label0.setText("1")
+#             label1.setText("2")
+#             if labelManager.selected:
+#                 labelManager.selected.setText("Selected")
+#
+#             glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
+#             labelManager.draw()
+#
+#             glfw.swap_buffers(win)
+#             glfw.poll_events()
+#
+#             tic = time.time() - start
+#             delay = 1/30 - tic
+#             if delay > 0:
+#                 time.sleep(delay)
+#
+#         glfw.terminate()
+#
+#
+# if __name__ == "__main__":
+#
+#     from config import *
+#
+#     LabelManager.test(CONFIG)

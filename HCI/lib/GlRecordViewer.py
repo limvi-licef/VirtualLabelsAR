@@ -21,48 +21,84 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class GlRecordViewer:
 
     ######################################################################
-    def __init__(self):
+    def __init__(self, videoSize, labelManager, dataManager):
 
-        self.initialized = False
+        self.m_glInitialized = False
         self.nframe = 0
-        self.labelqt = 0
+        #self.labelqt = 0
+        self.m_videoSize = videoSize
+        self.m_labelManager = labelManager
+        self.m_dataManager = dataManager
 
-    ######################################################################
-    def init(self, videoSize, labelManager, dataManager):
-
+    def initializeGl(self):
         self.frameDisplayer = GlFrameDisplayer()
         # print("IIIINNNNNIIIITTTT")
-        #self.data = data
-        self.m_labelManager = labelManager.init()
-        self.m_dataManager = dataManager.init()
+        # self.data = data
+        #self.m_labelManager = labelManager.init()
+        #self.m_dataManager = dataManager.init()
+        self.m_labelManager.initializeGl()
+        self.m_dataManager.init()
 
-        self.projection = glm.perspective(glm.radians(28), 16 / 9, 0.25, 5.0)
+        projection = glm.perspective(glm.radians(28), 16 / 9, 0.25, 5.0)
 
         glClearColor(0.1, 0.3, 0.4, 1.0)
         glEnable(GL_DEPTH_TEST)
 
-        w, h = videoSize
-        self.frameDisplayer.setTexture(w, h)
+        # w, h = videoSize
+        # self.frameDisplayer.setTexture(w, h)
+        self.frameDisplayer.setTexture(self.m_videoSize[0], self.m_videoSize[1])
 
         self.meshShader = MeshObject.getShader()
         glUseProgram(self.meshShader)
-        glUniformMatrix4fv(self.meshShader.uProjection, 1, False, glm.value_ptr(self.projection))
+        glUniformMatrix4fv(self.meshShader.uProjection, 1, False, glm.value_ptr(projection))
 
         glUseProgram(self.m_labelManager.shader)
-        glUniformMatrix4fv(self.m_labelManager.shader.uProjection, 1, False, glm.value_ptr(self.projection))
+        glUniformMatrix4fv(self.m_labelManager.shader.uProjection, 1, False, glm.value_ptr(projection))
 
         # Moved to DataManager
-        #self.meshes = []
-        #for idMesh, meshData in data["meshes"].items():
+        # self.meshes = []
+        # for idMesh, meshData in data["meshes"].items():
         #    mesh = MeshObject(meshData)
         #    self.meshes.append(mesh)
 
-        self.initialized = True
+        self.m_glInitialized = True
+
+    ######################################################################
+    #def init(self):
+
+        # self.frameDisplayer = GlFrameDisplayer()
+        # # print("IIIINNNNNIIIITTTT")
+        # #self.data = data
+        # self.m_labelManager = labelManager.init()
+        # self.m_dataManager = dataManager.init()
+        #
+        # self.projection = glm.perspective(glm.radians(28), 16 / 9, 0.25, 5.0)
+        #
+        # glClearColor(0.1, 0.3, 0.4, 1.0)
+        # glEnable(GL_DEPTH_TEST)
+        #
+        # w, h = videoSize
+        # self.frameDisplayer.setTexture(w, h)
+        #
+        # self.meshShader = MeshObject.getShader()
+        # glUseProgram(self.meshShader)
+        # glUniformMatrix4fv(self.meshShader.uProjection, 1, False, glm.value_ptr(self.projection))
+        #
+        # glUseProgram(self.m_labelManager.shader)
+        # glUniformMatrix4fv(self.m_labelManager.shader.uProjection, 1, False, glm.value_ptr(self.projection))
+        #
+        # # Moved to DataManager
+        # #self.meshes = []
+        # #for idMesh, meshData in data["meshes"].items():
+        # #    mesh = MeshObject(meshData)
+        # #    self.meshes.append(mesh)
+        #
+        # self.initialized = True
 
     ######################################################################
     def receive(self, nframe, frame):
 
-        if self.initialized and self.frameDisplayer:
+        if self.m_glInitialized and self.frameDisplayer:
             #self.nframe = nframe if nframe < len(self.data["sync"]) else len(self.data["sync"]) - 1
             self.nframe = nframe if nframe < len(self.m_dataManager.getSync()) else len(self.m_dataManager.getSync()) - 1
             self.frameDisplayer.receive(frame)
@@ -70,7 +106,7 @@ class GlRecordViewer:
     ######################################################################
     def draw(self):
 
-        if self.initialized:
+        if self.m_glInitialized:
             # print("DDDDDRRRRRRRAAAAWWWWW")
             #idCam = self.data["sync"][self.nframe]
             idCam = self.m_dataManager.getSync()[self.nframe]
@@ -114,7 +150,7 @@ class GlRecordViewer:
         import sys
         from lib.VideoPlayer import VideoPlayer
         from json import loads
-        from lib.QtLabelManager import QtLabelManager
+        from lib.LabelManagerView import LabelManagerView
         from lib.LabelObject import LabelObject
 
         with open(config["rec_test"], mode="r") as datafile:
@@ -128,7 +164,7 @@ class GlRecordViewer:
         app = QtWidgets.QApplication(sys.argv)
         root = QtWidgets.QWidget()
         root.layout = QtWidgets.QVBoxLayout()
-        labelManager = QtLabelManager()
+        labelManager = LabelManagerView()
         root.layout.addWidget(labelManager)
         root.setLayout(root.layout)
 

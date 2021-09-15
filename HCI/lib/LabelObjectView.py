@@ -10,7 +10,7 @@ from lib.Matrix import Matrix
 from PyQt5.QtCore import (Qt, pyqtSignal)
 
         
-class QtLabelObject(QtWidgets.QWidget):
+class LabelObjectView(QtWidgets.QWidget):
 
     #s_dataUpdated = pyqtSignal()
     # textClose, textFar, size, thick, position(x,y,z), orientation(x,y)
@@ -142,4 +142,4 @@ if __name__ == "__main__":
     from compiler import *
     from OpenGL.GL import *
     
-    QtLabelObject.test(CONFIG)
+    LabelObjectView.test(CONFIG)

@@ -69,7 +69,8 @@ class Server:
         #print ("Hello.")
 
     def stop(self):
-        self.m_thread.kill()
+        if (self.m_thread.isAlive()):
+            self.m_thread.kill()
 
     async def connection(self, client, path):
         '''Wait for a client to send request "GetLabels" to return data from "labels.txt"'''

@@ -15,7 +15,7 @@ from time import time
 import json
 
 from lib.DataManager import DataManager
-from lib.QtLabelObject import QtLabelObject
+from lib.LabelObjectView import LabelObjectView
 from PyQt5.QtCore import (Qt, pyqtSignal, QObject)
 from lib.Matrix import Matrix
 
@@ -257,7 +257,7 @@ class LabelObject (QObject):
         # print("\t Thickness: " + str(self.m_thickness))
         # print("\t Position: " + str(self.position))
         # print("\t Orientation: " + str(Matrix.getRotation(self.position)))
-        self.m_ui = QtLabelObject(parent)
+        self.m_ui = LabelObjectView(parent)
         self.m_ui.ui.textCloseInput.setText(self.m_textClose)
         self.m_ui.ui.textFarInput.setText(self.m_textFar)
         self.m_ui.ui.sizeInput.setValue(self.m_size)

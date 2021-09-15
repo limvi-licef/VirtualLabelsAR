@@ -70,72 +70,76 @@ class MainApplication(QtWidgets.QMainWindow):
     def open(self):
         
         #print("[MainApplication::open] Called")
-        self.ui.LogoSherbrooke.setVisible(False)
+
         
         file, _ = QtWidgets.QFileDialog.getOpenFileName()
         fileinfo = QtCore.QFileInfo(file)
 
-        with open(file, mode="r") as datafile:
-            data = loads(datafile.read())
-            
-        if self.mainWidget: self.mainWidget.deleteLater()
-        self.mainWidget = QtWidgets.QWidget()
-        layout = QtWidgets.QHBoxLayout()
-        self.mainWidget.setLayout(layout)
+        if (file != ""):
+            self.ui.LogoSherbrooke.setVisible(False)
+            with open(file, mode="r") as datafile:
+                data = loads(datafile.read())
 
-        container1 = QtWidgets.QWidget()
-        container1.layout = QtWidgets.QVBoxLayout()
-        container1.setLayout(container1.layout)
-        qtVideoPlayer = QtVideoPlayer(fileinfo.dir().path() + "/" + data["video"])
-        dataManager = DataManager(data)
-        #qtLabelManager = QtLabelManager(self)
-        labelManager = LabelManager(dataManager)
-        qtLabelManager = labelManager.setUI(parent=self)
-        #labelManager.setDirectoryFilePath(fileinfo.dir().path())
-        #qtLabelManager = LabelManager.getInstance().setUI(parent = self)
-        #LabelManager.getInstance().setDirectoryFilePath(fileinfo.dir().path())
+            if self.mainWidget: self.mainWidget.deleteLater()
+            self.mainWidget = QtWidgets.QWidget()
+            layout = QtWidgets.QHBoxLayout()
+            self.mainWidget.setLayout(layout)
 
-        width, height = qtVideoPlayer.core.WIDTH, qtVideoPlayer.core.HEIGHT
-        #args = ((width, height), data, qtLabelManager.manager)
-        #args = ((width, height), data, LabelManager.getInstance())
-        #args = ((width, height), data, labelManager, cameraManager)
+            container1 = QtWidgets.QWidget()
+            container1.layout = QtWidgets.QVBoxLayout()
+            container1.setLayout(container1.layout)
+            qtVideoPlayer = QtVideoPlayer(fileinfo.dir().path() + "/" + data["video"])
+            dataManager = DataManager(data)
+            #qtLabelManager = QtLabelManager(self)
+            labelManager = LabelManager(dataManager)
+            qtLabelManager = labelManager.setUI(parent=self)
+            #labelManager.setDirectoryFilePath(fileinfo.dir().path())
+            #qtLabelManager = LabelManager.getInstance().setUI(parent = self)
+            #LabelManager.getInstance().setDirectoryFilePath(fileinfo.dir().path())
 
-        print(data["video"])
-        print(str(width) + " " + str(height))
+            width, height = qtVideoPlayer.core.WIDTH, qtVideoPlayer.core.HEIGHT
+            #args = ((width, height), data, qtLabelManager.manager)
+            #args = ((width, height), data, LabelManager.getInstance())
+            #args = ((width, height), data, labelManager, cameraManager)
 
-        rv = QtRecordViewer(width, height, labelManager, dataManager)
+            print(data["video"])
+            print(str(width) + " " + str(height))
 
-        # UI building
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        rv.setSizePolicy(sizePolicy)
-        qtVideoPlayer.frameUpdate.connect(rv.receive)
-        container1.layout.addWidget(rv)
-        container1.layout.addWidget(qtVideoPlayer)
-        layout.addWidget(container1)
+            rv = QtRecordViewer(width, height, labelManager, dataManager)
+
+            # UI building
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+            rv.setSizePolicy(sizePolicy)
+            qtVideoPlayer.frameUpdate.connect(rv.receive)
+            container1.layout.addWidget(rv)
+            container1.layout.addWidget(qtVideoPlayer)
+            layout.addWidget(container1)
 
 
-        container2 = QtWidgets.QWidget()
-        container2.layout = QtWidgets.QVBoxLayout()
-        container2.setLayout(container2.layout)
-   
-        qtLabelManager.canvas = rv
-        print(qtLabelManager.canvas)
-    
-        container2.layout.addWidget(qtLabelManager)
-        layout.addWidget(container2)
-        
-        self.mainWidget.setLayout(layout)
-        self.layout.addWidget(self.mainWidget)
+            container2 = QtWidgets.QWidget()
+            container2.layout = QtWidgets.QVBoxLayout()
+            container2.setLayout(container2.layout)
 
-        # Loading labels - if any
-        #lm = LabelManager.getInstance()
-        #lm.initFromFile(pathToFile=fileinfo.dir().path() + "/labels.txt")
-        baseFilePathForLabelsFile = os.path.splitext(fileinfo.filePath())[0] # Get the filepath without the extension
-        print ("File to open: " + baseFilePathForLabelsFile)
-        labelsFilePath = baseFilePathForLabelsFile + ".labels"
-        #labelsFilePath = fileinfo.dir().path() + "/labels.txt"
-        labelManager.initFromFile(pathToFile=labelsFilePath) # REPRENDRE ICI, le fichier des labels ne s'enregistre pas avec le nouveau nom.
-        self.m_server.updatePathLabelsFile(labelsFilePath)
+            qtLabelManager.canvas = rv
+            print(qtLabelManager.canvas)
+
+            container2.layout.addWidget(qtLabelManager)
+            layout.addWidget(container2)
+
+            self.mainWidget.setLayout(layout)
+            self.layout.addWidget(self.mainWidget)
+
+            # Loading labels - if any
+            #lm = LabelManager.getInstance()
+            #lm.initFromFile(pathToFile=fileinfo.dir().path() + "/labels.txt")
+            baseFilePathForLabelsFile = os.path.splitext(fileinfo.filePath())[0] # Get the filepath without the extension
+            print ("File to open: " + baseFilePathForLabelsFile)
+            labelsFilePath = baseFilePathForLabelsFile + ".labels"
+            #labelsFilePath = fileinfo.dir().path() + "/labels.txt"
+            labelManager.initFromFile(pathToFile=labelsFilePath) # REPRENDRE ICI, le fichier des labels ne s'enregistre pas avec le nouveau nom.
+            self.m_server.updatePathLabelsFile(labelsFilePath)
+        else:
+            print ("[MainApplication::open] Info - No file opened")
         
     def exit(self):
         
