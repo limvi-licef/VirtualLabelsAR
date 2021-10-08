@@ -56,8 +56,8 @@ class LabelObjectView(QtWidgets.QWidget):
         if self.allow_update:
             #print("[QtLabelObject:update] allow update")
             #text = self.ui.textInput.text()
-            textClose = self.ui.textCloseInput.text()
-            textFar = self.ui.textFarInput.text()
+            text = self.ui.textDisplayed.text()
+            name = self.ui.textLabelName.text()
             size = self.ui.sizeInput.value()
             thick = self.ui.thickInput.value()
             #self.label.setText(textClose, textFar, size, thick)
@@ -72,7 +72,7 @@ class LabelObjectView(QtWidgets.QWidget):
             orientation = (self.ui.xorientInput.value(),
                            self.ui.yorientInput.value())
 
-            self.s_guiUpdated.emit(textClose, textFar, size, thick, position, orientation)
+            self.s_guiUpdated.emit(name, text, size, thick, position, orientation)
 
         #self.s_dataUpdated.emit()
         #LabelManager.getInstance().saveToTXT()

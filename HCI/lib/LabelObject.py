@@ -30,13 +30,13 @@ class LabelObject (QObject):
     m_height = 180
     SHADERS = CONFIG["shaders"]
 
-    m_textClose = ""
-    m_textFar = ""
+    m_text = ""
     m_ui = None
     m_size=-1.0
     m_thickness = -1
     m_render = None
     m_dataManager = None
+    m_name = ""
 
     # cameraTranslation = glm.mat4()
     #cameraRotation = glm.mat4()
@@ -70,8 +70,8 @@ class LabelObject (QObject):
             self.id = labelData["id"]
             self.timestamp = labelData["timestamp"]
 
-            textClose, textFar, size, thick = labelData["info"]["textClose"], labelData["info"]["textFar"], labelData["info"]["size"], labelData["info"]["thick"]
-            self.setText(textClose, textFar, size, thick)
+            name, text, size, thick = labelData["info"]["name"], labelData["info"]["text"], labelData["info"]["size"], labelData["info"]["thick"]
+            self.setText(name, text, size, thick)
             #self.positionSetting = DataManager.getPositionSetting(glm.mat4(labelData["position"]), labelData["timestamp"]) #Position set by the users (in cameraRef)
             self.positionSetting = dataManager.getPositionSetting(glm.mat4(labelData["position"]), labelData[
                 "timestamp"])  # Position set by the users (in cameraRef)
@@ -158,8 +158,8 @@ class LabelObject (QObject):
             "id": self.id,
             "timestamp": self.timestamp,
             "info": {
-                "textClose": self.m_textClose,
-                "textFar": self.m_textFar,
+                "name": self.m_name,
+                "text": self.m_text,
                 "size": self.m_size,
                 "thick": self.m_thickness,
                 },
@@ -202,21 +202,21 @@ class LabelObject (QObject):
         
         
     ######################################################################
-    def setText(self, textClose="", textFar="", size=0.75, thick=2):
-        print("[LabelObject::setText] Called - textFar: " + textFar)
+    def setText(self, name = "", text="", size=0.75, thick=2):
+        print("[LabelObject::setText] Called - text: " + text)
         w, h = LabelObject.m_width, LabelObject.m_height
         font = cv2.FONT_HERSHEY_SIMPLEX
         
-        textsize = cv2.getTextSize(textFar, font, size, thick)[0]
+        textsize = cv2.getTextSize(text, font, size, thick)[0]
         x = (w - textsize[0]) // 2
         y = (h + textsize[1]) // 2
         img = np.zeros((h, w, 3), dtype=np.uint8)
-        
-        self.m_textFar = textFar
-        self.m_textClose = textClose
+
+        self.m_name = name
+        self.m_text = text
         self.m_size = size
         self.m_thickness = thick
-        self.m_render = cv2.putText(img, textFar, (x,y), font, size, (255,255,255), thick)
+        self.m_render = cv2.putText(img, text, (x,y), font, size, (255,255,255), thick)
         
            
     ######################################################################
@@ -258,8 +258,10 @@ class LabelObject (QObject):
         # print("\t Position: " + str(self.position))
         # print("\t Orientation: " + str(Matrix.getRotation(self.position)))
         self.m_ui = LabelObjectView(parent)
-        self.m_ui.ui.textCloseInput.setText(self.m_textClose)
-        self.m_ui.ui.textFarInput.setText(self.m_textFar)
+        #self.m_ui.ui.textCloseInput.setText(self.m_textClose)
+        #self.m_ui.ui.textFarInput.setText(self.m_textFar)
+        self.m_ui.ui.textLabelName.setText(self.m_name)
+        self.m_ui.ui.textDisplayed.setText(self.m_text)
         self.m_ui.ui.sizeInput.setValue(self.m_size)
         self.m_ui.ui.thickInput.setValue(self.m_thickness)
 
@@ -274,7 +276,7 @@ class LabelObject (QObject):
 
         self.m_ui.s_guiUpdated.connect(self.updateData)
 
-    def updateData(self, textClose, textFar, size, thick, position, orientation):
+    def updateData(self, name, text, size, thick, position, orientation):
         print ("[LabelObject:updateData] Called")
         # print("\t ID: " + self.id)
         # print("\t Text close: " + textClose)
@@ -283,7 +285,7 @@ class LabelObject (QObject):
         # print("\t Thickness: " + str(thick))
         # print("\t Position: " + str(position))
         # print("\t Orientation: " + str(orientation))
-        self.setText(textClose, textFar, size, thick)
+        self.setText(name, text, size, thick)
         self.setPos(position, orientation)
         self.s_dataUpdated.emit()
 

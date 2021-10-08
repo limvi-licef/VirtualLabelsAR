@@ -28,7 +28,7 @@
     </widget>
    </item>
    <item row="0" column="3">
-    <widget class="QLineEdit" name="textCloseInput"/>
+    <widget class="QLineEdit" name="textLabelName"/>
    </item>
    <item row="9" column="3">
     <widget class="QDoubleSpinBox" name="zposInput">
@@ -198,7 +198,7 @@
    <item row="0" column="0">
     <widget class="QLabel" name="textCloseLabel">
      <property name="text">
-      <string>Text close</string>
+      <string>Label name</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -242,12 +242,12 @@
     </widget>
    </item>
    <item row="3" column="3">
-    <widget class="QLineEdit" name="textFarInput"/>
+    <widget class="QLineEdit" name="textDisplayed"/>
    </item>
    <item row="3" column="0">
     <widget class="QLabel" name="TextFarLabel">
      <property name="text">
-      <string>Text far</string>
+      <string>Displayed text</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -259,7 +259,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>textCloseInput</sender>
+   <sender>textLabelName</sender>
    <signal>textChanged(QString)</signal>
    <receiver>LabelObject</receiver>
    <slot>update()</slot>
@@ -387,7 +387,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>textFarInput</sender>
+   <sender>textDisplayed</sender>
    <signal>textChanged(QString)</signal>
    <receiver>LabelObject</receiver>
    <slot>update()</slot>
