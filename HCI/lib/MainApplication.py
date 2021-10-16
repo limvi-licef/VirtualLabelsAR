@@ -8,7 +8,7 @@
 
 from json import loads
 
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtWidgets, QtGui
 
 from lib.GlFrameDisplayer import GlFrameDisplayer
 from lib.LabelObject import LabelObject
@@ -38,6 +38,32 @@ class MainApplication(QtWidgets.QMainWindow):
         self.mainWidget = None
         
         self.layout = QtWidgets.QVBoxLayout()
+
+        widgetCentral = QtWidgets.QWidget()
+        self.m_widgetCentralLayout = QtWidgets.QHBoxLayout()
+        widgetCentral.setLayout(self.m_widgetCentralLayout)
+
+        self.layout.addWidget(widgetCentral, 2)
+
+        widgetBottom = QtWidgets.QWidget()
+        widgetBottomLayout = QtWidgets.QHBoxLayout()
+        widgetBottom.setLayout(widgetBottomLayout)
+
+        widgetLogoUdS = QtWidgets.QLabel()
+        logoUdS = QtGui.QPixmap("./icons/universiteLogo.png")
+        widgetLogoUdS.setPixmap(logoUdS.scaledToHeight(75))
+
+        widgetLogoUPoitiers = QtWidgets.QLabel()
+        logoUPoitiers = QtGui.QPixmap("./icons/LogoGphy.jpg")
+        widgetLogoUPoitiers.setPixmap(logoUPoitiers.scaledToHeight(75))
+
+        widgetBottomLayout.addStretch()
+        widgetBottomLayout.addWidget(widgetLogoUdS)
+        widgetBottomLayout.addWidget(widgetLogoUPoitiers)
+
+        self.layout.addStretch()
+        self.layout.addWidget(widgetBottom)
+
         self.ui.main.setLayout(self.layout)
 
         self.m_server = Server()
@@ -76,15 +102,16 @@ class MainApplication(QtWidgets.QMainWindow):
         fileinfo = QtCore.QFileInfo(file)
 
         if (file != ""):
-            self.ui.LogoSherbrooke.setVisible(False)
+            #self.ui.LogoSherbrooke.setVisible(False)
             with open(file, mode="r") as datafile:
                 data = loads(datafile.read())
 
-            if self.mainWidget: self.mainWidget.deleteLater()
-            self.mainWidget = QtWidgets.QWidget()
-            layout = QtWidgets.QHBoxLayout()
-            self.mainWidget.setLayout(layout)
+            #if self.mainWidget: self.mainWidget.deleteLater()
+            #self.mainWidget = QtWidgets.QWidget()
+            #layout = QtWidgets.QVBoxLayout()
+            #self.mainWidget.setLayout(layout)
 
+            # Building the GUI
             container1 = QtWidgets.QWidget()
             container1.layout = QtWidgets.QVBoxLayout()
             container1.setLayout(container1.layout)
@@ -113,8 +140,6 @@ class MainApplication(QtWidgets.QMainWindow):
             qtVideoPlayer.frameUpdate.connect(rv.receive)
             container1.layout.addWidget(rv)
             container1.layout.addWidget(qtVideoPlayer)
-            layout.addWidget(container1)
-
 
             container2 = QtWidgets.QWidget()
             container2.layout = QtWidgets.QVBoxLayout()
@@ -124,10 +149,15 @@ class MainApplication(QtWidgets.QMainWindow):
             print(qtLabelManager.canvas)
 
             container2.layout.addWidget(qtLabelManager)
-            layout.addWidget(container2)
 
-            self.mainWidget.setLayout(layout)
-            self.layout.addWidget(self.mainWidget)
+            self.m_widgetCentralLayout.addWidget(container2)
+            self.m_widgetCentralLayout.addWidget(container1, 2)
+
+
+            #self.mainWidget.setLayout(layout)
+            #self.layout.addWidget(self.mainWidget)
+
+
 
             # Loading labels - if any
             #lm = LabelManager.getInstance()
