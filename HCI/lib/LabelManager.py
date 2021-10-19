@@ -32,7 +32,7 @@ class LabelManager:
 
     ######################################################################
     def __init__(self, dataManager):
-        #print("[LabelManager::__init__] Called")
+        print("[LabelManager::__init__] Called")
         #initialize singleton
         # if LabelManager.__instance != None:
         #     raise Exception("This class is a singleton.")
@@ -47,6 +47,7 @@ class LabelManager:
         self.m_dataManager = dataManager
 
         #self.shader= LabelObject.getShader()
+        print("[LabelManager::__init__] End")
 
 
     ######################################################################
@@ -161,9 +162,9 @@ class LabelManager:
             f = open(pathToFile, "r")
             test = f.read()
             labelsRaw = json.loads(test)
-            print(labelsRaw)
+            #print(labelsRaw)
             for l in labelsRaw:
-                print(l)
+                #print(l)
                 label = self.create(labelData=l)
                 #label = self.create()
                 self.m_ui.addLabelToGui(label)

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: ISO-8859-1 -*-
 
 ############################################################################################
 # Packages
@@ -203,7 +203,7 @@ class LabelObject (QObject):
         
     ######################################################################
     def setText(self, name = "", text="", size=0.75, thick=2):
-        print("[LabelObject::setText] Called - text: " + text)
+        #print("[LabelObject::setText] Called - text: " + text)
         w, h = LabelObject.m_width, LabelObject.m_height
         font = cv2.FONT_HERSHEY_SIMPLEX
         

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'ui/MainApplication.ui'
+# Form implementation generated from reading ui file 'MainApplication.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -14,7 +14,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainApplication(object):
     def setupUi(self, MainApplication):
         MainApplication.setObjectName("MainApplication")
-        MainApplication.resize(1105, 748)
+        MainApplication.resize(1600, 1200)
+        MainApplication.setMinimumSize(QtCore.QSize(1600, 1200))
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -36,13 +37,13 @@ class Ui_MainApplication(object):
         palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Window, brush)
         MainApplication.setPalette(palette)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("ui\\../icons/LogoApp.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("../icons/LogoApp.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainApplication.setWindowIcon(icon)
         self.main = QtWidgets.QWidget(MainApplication)
         self.main.setObjectName("main")
         MainApplication.setCentralWidget(self.main)
         self.menubar = QtWidgets.QMenuBar(MainApplication)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1105, 26))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1600, 21))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
@@ -52,17 +53,17 @@ class Ui_MainApplication(object):
         MainApplication.setStatusBar(self.statusbar)
         self.actionNew = QtWidgets.QAction(MainApplication)
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("ui\\../icons/LogoBarre.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("../icons/LogoBarre.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionNew.setIcon(icon1)
         self.actionNew.setObjectName("actionNew")
         self.actionOpen = QtWidgets.QAction(MainApplication)
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("ui\\../icons/Open.jpg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap("../icons/Open.jpg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionOpen.setIcon(icon2)
         self.actionOpen.setObjectName("actionOpen")
         self.actionExit = QtWidgets.QAction(MainApplication)
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap("ui\\../icons/Exit.jpg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap("../icons/Exit.jpg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionExit.setIcon(icon3)
         self.actionExit.setObjectName("actionExit")
         self.menuFile.addAction(self.actionNew)
@@ -78,18 +79,8 @@ class Ui_MainApplication(object):
 
     def retranslateUi(self, MainApplication):
         _translate = QtCore.QCoreApplication.translate
-        MainApplication.setWindowTitle(_translate("MainApplication", "MainWindow"))
-        self.menuFile.setTitle(_translate("MainApplication", "File"))
-        self.actionNew.setText(_translate("MainApplication", "New record"))
-        self.actionOpen.setText(_translate("MainApplication", "Open record"))
-        self.actionExit.setText(_translate("MainApplication", "Exit"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainApplication = QtWidgets.QMainWindow()
-    ui = Ui_MainApplication()
-    ui.setupUi(MainApplication)
-    MainApplication.show()
-    sys.exit(app.exec_())
+        MainApplication.setWindowTitle(_translate("MainApplication", "Gestionnaire des étiquettes"))
+        self.menuFile.setTitle(_translate("MainApplication", "Menu"))
+        self.actionNew.setText(_translate("MainApplication", "Nouvel enregistrement"))
+        self.actionOpen.setText(_translate("MainApplication", "Ouvrir enregistrement"))
+        self.actionExit.setText(_translate("MainApplication", "Quitter"))

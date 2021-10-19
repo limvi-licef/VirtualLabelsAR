@@ -7,7 +7,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from numpy import ndarray
 
 # Ui
-from compiler import *
+#from compiler import *
 from ui.Ui_VideoPlayer import Ui_VideoPlayer
 
 # Lib
@@ -32,7 +32,9 @@ class QtVideoPlayer(QtWidgets.QWidget):
             @param parent: Qt widget
             @param refresh: int, refresh period in millisecond
         """
-        
+
+        print ("[QtVideoPlayer::__init__] Called")
+
         # constructors
         QtWidgets.QWidget.__init__(self, parent)        
         self.core = VideoPlayer(filename).interface(self)
@@ -44,7 +46,8 @@ class QtVideoPlayer(QtWidgets.QWidget):
         # set the refresh timer and set the time slider
         self._setRefresh(refresh)
         self.ui.timeSlider.setMaximum(int(self.core.TIME)-1)
-        
+
+        print("[QtVideoPlayer::__init__] End")
         
     ########################################################################################
     def _setRefresh(self, t):

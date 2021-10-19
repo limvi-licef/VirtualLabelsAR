@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'ui/RecordViewer.ui'
+# Form implementation generated from reading ui file 'RecordViewer.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -54,13 +54,3 @@ class Ui_RecordViewer(object):
         _translate = QtCore.QCoreApplication.translate
         RecordViewer.setWindowTitle(_translate("RecordViewer", "Form"))
         self.label.setText(_translate("RecordViewer", "TextLabel"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    RecordViewer = QtWidgets.QWidget()
-    ui = Ui_RecordViewer()
-    ui.setupUi(RecordViewer)
-    RecordViewer.show()
-    sys.exit(app.exec_())

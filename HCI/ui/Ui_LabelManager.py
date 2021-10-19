@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_LabelManager(object):
     def setupUi(self, LabelManager):
         LabelManager.setObjectName("LabelManager")
-        LabelManager.resize(242, 233)
+        LabelManager.resize(242, 239)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -52,15 +52,5 @@ class Ui_LabelManager(object):
     def retranslateUi(self, LabelManager):
         _translate = QtCore.QCoreApplication.translate
         LabelManager.setWindowTitle(_translate("LabelManager", "Form"))
-        self.addButton.setText(_translate("LabelManager", "Add"))
-        self.removeButton.setText(_translate("LabelManager", "Remove"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    LabelManager = QtWidgets.QWidget()
-    ui = Ui_LabelManager()
-    ui.setupUi(LabelManager)
-    LabelManager.show()
-    sys.exit(app.exec_())
+        self.addButton.setText(_translate("LabelManager", "Ajouter"))
+        self.removeButton.setText(_translate("LabelManager", "Effacer"))

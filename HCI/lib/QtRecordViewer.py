@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: UTF-8 -*-
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -20,7 +20,7 @@ class QtRecordViewer(QtWidgets.QOpenGLWidget):
     
     #def __init__(self, a, parent=None):
     def __init__(self, videoWidth, videoHeight, labelManager, dataManager, parent=None):
-        
+        print("[QtRecordViewer::__init__] Called")
         QtWidgets.QOpenGLWidget.__init__(self, parent)
         
         #self.m_recordViewer = GlRecordViewer()
@@ -42,6 +42,8 @@ class QtRecordViewer(QtWidgets.QOpenGLWidget):
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update)
         self.timer.start(50)
+
+        print("[QtRecordViewer::__init__] Called")
         
         
     def resizeGL(self, width, height):
@@ -102,7 +104,7 @@ class QtRecordViewer(QtWidgets.QOpenGLWidget):
 if __name__ == "__main__":
     
     from config import *
-    from compiler import *
+    #from compiler import *
     
     GlFrameDisplayer.SHADERS = CONFIG["shaders"]
     MeshObject.SHADERS = CONFIG["shaders"]

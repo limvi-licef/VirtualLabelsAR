@@ -29,7 +29,7 @@
    <item row="4" column="0" alignment="Qt::AlignRight|Qt::AlignVCenter">
     <widget class="QLabel" name="batteryLabel">
      <property name="text">
-      <string>Battery:</string>
+      <string>Batterie</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
@@ -56,7 +56,7 @@
    <item row="2" column="0">
     <widget class="QLabel" name="passwordLabel">
      <property name="text">
-      <string>Password</string>
+      <string>Mot de passe</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -66,7 +66,7 @@
    <item row="0" column="0">
     <widget class="QLabel" name="hostLabel">
      <property name="text">
-      <string>Host</string>
+      <string>IP Hololens</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -83,7 +83,7 @@
    <item row="1" column="0">
     <widget class="QLabel" name="loginLabel">
      <property name="text">
-      <string>Login</string>
+      <string>Identifiant</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -103,7 +103,7 @@
    <item row="5" column="0" alignment="Qt::AlignRight|Qt::AlignTop">
     <widget class="QLabel" name="previewLabel">
      <property name="text">
-      <string>Preview:</string>
+      <string>Aperçu</string>
      </property>
     </widget>
    </item>
@@ -127,7 +127,7 @@
    <item row="3" column="1" alignment="Qt::AlignHCenter">
     <widget class="QPushButton" name="connectButton">
      <property name="text">
-      <string>Connect</string>
+      <string>Se connecter</string>
      </property>
     </widget>
    </item>

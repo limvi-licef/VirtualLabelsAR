@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'ui/WindowsDevicePortal.ui'
+# Form implementation generated from reading ui file 'WindowsDevicePortal.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -79,21 +79,11 @@ class Ui_WindowsDevicePortal(object):
     def retranslateUi(self, WindowsDevicePortal):
         _translate = QtCore.QCoreApplication.translate
         WindowsDevicePortal.setWindowTitle(_translate("WindowsDevicePortal", "Form"))
-        self.batteryLabel.setText(_translate("WindowsDevicePortal", "Battery:"))
+        self.batteryLabel.setText(_translate("WindowsDevicePortal", "Batterie"))
         self.batteryLevel.setText(_translate("WindowsDevicePortal", "/"))
-        self.passwordLabel.setText(_translate("WindowsDevicePortal", "Password"))
-        self.hostLabel.setText(_translate("WindowsDevicePortal", "Host"))
-        self.loginLabel.setText(_translate("WindowsDevicePortal", "Login"))
-        self.previewLabel.setText(_translate("WindowsDevicePortal", "Preview:"))
+        self.passwordLabel.setText(_translate("WindowsDevicePortal", "Mot de passe"))
+        self.hostLabel.setText(_translate("WindowsDevicePortal", "IP Hololens"))
+        self.loginLabel.setText(_translate("WindowsDevicePortal", "Identifiant"))
+        self.previewLabel.setText(_translate("WindowsDevicePortal", "Aperçu"))
         self.previewButton.setText(_translate("WindowsDevicePortal", "On"))
-        self.connectButton.setText(_translate("WindowsDevicePortal", "Connect"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    WindowsDevicePortal = QtWidgets.QWidget()
-    ui = Ui_WindowsDevicePortal()
-    ui.setupUi(WindowsDevicePortal)
-    WindowsDevicePortal.show()
-    sys.exit(app.exec_())
+        self.connectButton.setText(_translate("WindowsDevicePortal", "Se connecter"))

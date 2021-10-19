@@ -48,8 +48,8 @@ class MeshObject:
         """
 
         self.id = data[0]
-        print ("_buildFromList called")
-        print (data[1])
+        #print ("_buildFromList called")
+        #print (data[1])
         #self.vt = np.array(data[1], dtype=np.float32)
         self.vt = data[1]
         #self.nt = np.array(data[2], dtype=np.float32)
@@ -94,7 +94,7 @@ class MeshObject:
             Creates buffers from arrays of data.
         """
 
-        print ("prepare called")
+        #print ("prepare called")
         self.vertexTransform = glm.mat4(self.vt)
         self.normalTransform = glm.mat4(self.nt)
         self.vert_vbo = vbo.VBO(self.vertices)

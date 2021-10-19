@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: UTF-8 -*-
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -139,7 +139,7 @@ class LabelObjectView(QtWidgets.QWidget):
 if __name__ == "__main__":
     
     from config import *
-    from compiler import *
+    #from compiler import *
     from OpenGL.GL import *
     
     LabelObjectView.test(CONFIG)

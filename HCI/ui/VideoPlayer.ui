@@ -22,27 +22,27 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="minimumSize">
+      <size>
+       <width>70</width>
+       <height>40</height>
+      </size>
+     </property>
      <property name="maximumSize">
       <size>
-       <width>1000</width>
+       <width>70</width>
        <height>1000</height>
       </size>
      </property>
      <property name="text">
-      <string>Play</string>
+      <string>Lecture</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../icons/play.png</normaloff>../icons/play.png</iconset>
      </property>
      <property name="shortcut">
       <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="3">
-    <widget class="QSlider" name="timeSlider">
-     <property name="value">
-      <number>0</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
@@ -53,22 +53,26 @@
      </property>
      <property name="minimumSize">
       <size>
-       <width>75</width>
-       <height>0</height>
+       <width>70</width>
+       <height>40</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>16777215</width>
-       <height>23</height>
+       <width>70</width>
+       <height>40</height>
       </size>
      </property>
      <property name="text">
       <string>Pause</string>
      </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../icons/pause.png</normaloff>../icons/pause.png</iconset>
+     </property>
     </widget>
    </item>
-   <item row="0" column="4">
+   <item row="0" column="3">
     <widget class="QLabel" name="timeLabel">
      <property name="text">
       <string>0:00</string>
@@ -79,12 +83,12 @@
     </widget>
    </item>
    <item row="0" column="2">
-    <widget class="QPushButton" name="stopButton">
-     <property name="enabled">
-      <bool>true</bool>
+    <widget class="QSlider" name="timeSlider">
+     <property name="value">
+      <number>0</number>
      </property>
-     <property name="text">
-      <string>Stop</string>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
@@ -133,22 +137,6 @@
     <hint type="sourcelabel">
      <x>373</x>
      <y>19</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>265</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>stopButton</sender>
-   <signal>clicked()</signal>
-   <receiver>VideoPlayer</receiver>
-   <slot>stop()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>208</x>
-     <y>20</y>
     </hint>
     <hint type="destinationlabel">
      <x>265</x>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'ui/RecordSession.ui'
+# Form implementation generated from reading ui file 'RecordSession.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -47,17 +47,7 @@ class Ui_RecordSession(object):
     def retranslateUi(self, RecordSession):
         _translate = QtCore.QCoreApplication.translate
         RecordSession.setWindowTitle(_translate("RecordSession", "Form"))
-        self.recordButton.setText(_translate("RecordSession", "Record"))
-        self.saveButton.setText(_translate("RecordSession", "Save"))
-        self.stopButton.setText(_translate("RecordSession", "Stop"))
+        self.recordButton.setText(_translate("RecordSession", "Enregistrer"))
+        self.saveButton.setText(_translate("RecordSession", "Sauvegarder"))
+        self.stopButton.setText(_translate("RecordSession", "Arrêter"))
         self.time.setText(_translate("RecordSession", "0:00"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    RecordSession = QtWidgets.QWidget()
-    ui = Ui_RecordSession()
-    ui.setupUi(RecordSession)
-    RecordSession.show()
-    sys.exit(app.exec_())

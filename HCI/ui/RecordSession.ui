@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <widget class="QPushButton" name="recordButton">
      <property name="text">
-      <string>Record</string>
+      <string>Enregistrer</string>
      </property>
     </widget>
    </item>
@@ -37,7 +37,7 @@
       <bool>false</bool>
      </property>
      <property name="text">
-      <string>Save</string>
+      <string>Sauvegarder</string>
      </property>
     </widget>
    </item>
@@ -47,7 +47,7 @@
       <bool>false</bool>
      </property>
      <property name="text">
-      <string>Stop</string>
+      <string>Arrêter</string>
      </property>
     </widget>
    </item>

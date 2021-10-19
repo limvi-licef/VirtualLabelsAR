@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1105</width>
-    <height>748</height>
+    <width>1600</width>
+    <height>1200</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1600</width>
+    <height>1200</height>
+   </size>
   </property>
   <property name="palette">
    <palette>
@@ -75,7 +81,7 @@
    </palette>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Gestionnaire des étiquettes</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -87,13 +93,13 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1105</width>
-     <height>26</height>
+     <width>1600</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>Menu</string>
     </property>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
@@ -108,7 +114,7 @@
      <normaloff>../icons/LogoBarre.png</normaloff>../icons/LogoBarre.png</iconset>
    </property>
    <property name="text">
-    <string>New record</string>
+    <string>Nouvel enregistrement</string>
    </property>
   </action>
   <action name="actionOpen">
@@ -117,7 +123,7 @@
      <normaloff>../icons/Open.jpg</normaloff>../icons/Open.jpg</iconset>
    </property>
    <property name="text">
-    <string>Open record</string>
+    <string>Ouvrir enregistrement</string>
    </property>
   </action>
   <action name="actionExit">
@@ -126,7 +132,7 @@
      <normaloff>../icons/Exit.jpg</normaloff>../icons/Exit.jpg</iconset>
    </property>
    <property name="text">
-    <string>Exit</string>
+    <string>Quitter</string>
    </property>
   </action>
  </widget>

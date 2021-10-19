@@ -7,7 +7,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from numpy import array
 
 # Ui
-from compiler import *
+#from compiler import *
 from ui.Ui_WindowsDevicePortal import Ui_WindowsDevicePortal
 
 # Lib

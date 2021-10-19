@@ -136,7 +136,7 @@ class LabelManagerView(QtWidgets.QWidget):
 if __name__ == "__main__":
     
     from config import *
-    from compiler import *
+    #from compiler import *
     from OpenGL.GL import *
     
     LabelManagerView.test(CONFIG)

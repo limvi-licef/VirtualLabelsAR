@@ -108,6 +108,6 @@ class QtRecordSession(QtWidgets.QWidget):
 if __name__ == "__main__":
     
     from config import *
-    from compiler import *
+    #from compiler import *
     
     QtRecordSession.test(CONFIG)

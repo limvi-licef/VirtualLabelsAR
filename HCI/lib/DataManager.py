@@ -31,7 +31,7 @@ class DataManager:
         return self.m_camera
 
     def __init__(self, data=None):
-        #print("[DataManager::__init__] Called")
+        print("[DataManager::__init__] Called")
 
         for cameraInfo in data["camera"]:
             self.m_cameraInfos[cameraInfo["time"]] = cameraInfo
@@ -42,6 +42,8 @@ class DataManager:
 
         self.m_sync = data["sync"]
         self.m_camera = data["camera"]
+
+        print("[DataManager::__init__] End")
 
     def getMesh(self):
         return self.m_mesh

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: UTF-8 -*-
 
 # Form implementation generated from reading ui file 'MainApplication.ui'
 #
@@ -23,6 +23,8 @@ from lib.DataManager import DataManager
 from lib.Server import Server
 import os
 
+#from compiler import *
+
 import threading
 
 
@@ -40,11 +42,56 @@ class MainApplication(QtWidgets.QMainWindow):
         self.layout = QtWidgets.QVBoxLayout()
 
         widgetCentral = QtWidgets.QWidget()
-        self.m_widgetCentralLayout = QtWidgets.QHBoxLayout()
+        #self.m_widgetCentralLayout = QtWidgets.QHBoxLayout()
+        self.m_widgetCentralLayout = QtWidgets.QStackedLayout()
         widgetCentral.setLayout(self.m_widgetCentralLayout)
+
+        self.m_wMainMenu = QtWidgets.QWidget()
+        self.m_wNew = QtWidgets.QWidget()
+        self.m_lNew = QtWidgets.QVBoxLayout()
+        self.m_wNew.setLayout(self.m_lNew)
+
+        self.m_wOpen = QtWidgets.QWidget()
+        self.m_lOpen = QtWidgets.QHBoxLayout()
+        self.m_wOpen.setLayout(self.m_lOpen)
+        self.m_bNew = False # to know if the widget has already been initialized for the "new" menu
+        self.m_bOpen = False # Same as previous but the "open" menu
+
+        self.m_widgetCentralLayout.addWidget(self.m_wMainMenu)
+        self.m_widgetCentralLayout.addWidget(self.m_wNew)
+        self.m_widgetCentralLayout.addWidget(self.m_wOpen)
 
         self.layout.addWidget(widgetCentral, 2)
 
+        # Building the main menu
+        self.m_lMainMenu = QtWidgets.QHBoxLayout()
+        self.m_wMainMenu.setLayout(self.m_lMainMenu)
+
+
+
+        wRecording = QtWidgets.QWidget()
+        lRecording = QtWidgets.QVBoxLayout()
+        wRecording.setLayout(lRecording)
+
+        bRecording = QtWidgets.QPushButton()
+        bRecording.setIcon(QtGui.QIcon("./icons/Recording.png"))
+        bRecording.setText("Démarrer un \n nouvel enregistrement")
+        bRecording.setMaximumWidth(300)
+        bRecording.clicked.connect(self.new)
+
+        bOpen = QtWidgets.QPushButton()
+        bOpen.setIcon(QtGui.QIcon("./icons/Open.png"))
+        bOpen.setText("Ajouter des étiquettes \n sur un enregistrement existant")
+        bOpen.setMaximumWidth(300)
+        bOpen.clicked.connect(self.open)
+
+        self.m_lMainMenu.addStretch()
+        self.m_lMainMenu.addWidget(bRecording)
+        self.m_lMainMenu.addStretch()
+        self.m_lMainMenu.addWidget(bOpen)
+        self.m_lMainMenu.addStretch()
+
+        # Building the bottom part of the interface containing the logos
         widgetBottom = QtWidgets.QWidget()
         widgetBottomLayout = QtWidgets.QHBoxLayout()
         widgetBottom.setLayout(widgetBottomLayout)
@@ -71,105 +118,90 @@ class MainApplication(QtWidgets.QMainWindow):
         
         
     def new(self):
-        
-        print("[MainApplication.new] Called")
-        if self.mainWidget: self.mainWidget.deleteLater()
-        self.mainWidget = QtWidgets.QWidget()
-        layout = QtWidgets.QVBoxLayout()
-        
-        self.ui.LogoSherbrooke.setVisible(False)
-        self.ui.LogoGphy.setVisible(False)
 
-        wdp = QtWindowsDevicePortal()
-        layout.addWidget(wdp)
-        
-        recordSession = QtRecordSession()
-        recordSession.setWdp(wdp)
-        layout.addWidget(recordSession)
-        print(recordSession)
-        
-        self.mainWidget.setLayout(layout)
-        self.layout.addWidget(self.mainWidget)
-        
+        if (self.m_bNew == False):
+            print("[MainApplication.new] Called")
+
+            wdp = QtWindowsDevicePortal()
+            self.m_lNew.addWidget(wdp)
+
+            recordSession = QtRecordSession()
+            recordSession.setWdp(wdp)
+            self.m_lNew.addWidget(recordSession)
+
+            self.m_bNew = True
+
+        self.m_widgetCentralLayout.setCurrentWidget(self.m_wNew)
     
         
     def open(self):
-        
-        #print("[MainApplication::open] Called")
+        if (self.m_bOpen == False):
+            file, _ = QtWidgets.QFileDialog.getOpenFileName()
+            fileinfo = QtCore.QFileInfo(file)
 
-        
-        file, _ = QtWidgets.QFileDialog.getOpenFileName()
-        fileinfo = QtCore.QFileInfo(file)
+            if (file != ""):
+                with open(file, mode="r") as datafile:
+                    data = loads(datafile.read())
 
-        if (file != ""):
-            #self.ui.LogoSherbrooke.setVisible(False)
-            with open(file, mode="r") as datafile:
-                data = loads(datafile.read())
+                # Building the GUI
+                container1 = QtWidgets.QWidget()
+                container1.layout = QtWidgets.QVBoxLayout()
+                container1.setLayout(container1.layout)
 
-            #if self.mainWidget: self.mainWidget.deleteLater()
-            #self.mainWidget = QtWidgets.QWidget()
-            #layout = QtWidgets.QVBoxLayout()
-            #self.mainWidget.setLayout(layout)
+                qtVideoPlayer = QtVideoPlayer(fileinfo.dir().path() + "/" + data["video"])
+                dataManager = DataManager(data)
+                labelManager = LabelManager(dataManager)
+                qtLabelManager = labelManager.setUI(parent=self)
 
-            # Building the GUI
-            container1 = QtWidgets.QWidget()
-            container1.layout = QtWidgets.QVBoxLayout()
-            container1.setLayout(container1.layout)
-            qtVideoPlayer = QtVideoPlayer(fileinfo.dir().path() + "/" + data["video"])
-            dataManager = DataManager(data)
-            #qtLabelManager = QtLabelManager(self)
-            labelManager = LabelManager(dataManager)
-            qtLabelManager = labelManager.setUI(parent=self)
-            #labelManager.setDirectoryFilePath(fileinfo.dir().path())
-            #qtLabelManager = LabelManager.getInstance().setUI(parent = self)
-            #LabelManager.getInstance().setDirectoryFilePath(fileinfo.dir().path())
+                width, height = qtVideoPlayer.core.WIDTH, qtVideoPlayer.core.HEIGHT
 
-            width, height = qtVideoPlayer.core.WIDTH, qtVideoPlayer.core.HEIGHT
-            #args = ((width, height), data, qtLabelManager.manager)
-            #args = ((width, height), data, LabelManager.getInstance())
-            #args = ((width, height), data, labelManager, cameraManager)
+                rv = QtRecordViewer(width, height, labelManager, dataManager)
 
-            print(data["video"])
-            print(str(width) + " " + str(height))
+                # UI building
+                sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+                rv.setSizePolicy(sizePolicy)
+                qtVideoPlayer.frameUpdate.connect(rv.receive)
+                container1.layout.addWidget(rv)
+                container1.layout.addWidget(qtVideoPlayer)
 
-            rv = QtRecordViewer(width, height, labelManager, dataManager)
+                container2 = QtWidgets.QWidget()
+                container2.layout = QtWidgets.QVBoxLayout()
+                container2.setLayout(container2.layout)
 
-            # UI building
-            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-            rv.setSizePolicy(sizePolicy)
-            qtVideoPlayer.frameUpdate.connect(rv.receive)
-            container1.layout.addWidget(rv)
-            container1.layout.addWidget(qtVideoPlayer)
+                qtLabelManager.canvas = rv
 
-            container2 = QtWidgets.QWidget()
-            container2.layout = QtWidgets.QVBoxLayout()
-            container2.setLayout(container2.layout)
+                container2.layout.addWidget(qtLabelManager)
 
-            qtLabelManager.canvas = rv
-            print(qtLabelManager.canvas)
+                self.m_lOpen.addWidget(container2)
+                self.m_lOpen.addWidget(container1,2)
 
-            container2.layout.addWidget(qtLabelManager)
+                # Loading labels - if any
+                baseFilePathForLabelsFile = os.path.splitext(fileinfo.filePath())[0] # Get the filepath without the extension
+                labelsFilePath = baseFilePathForLabelsFile + ".labels"
+                labelManager.initFromFile(pathToFile=labelsFilePath)
+                self.m_server.updatePathLabelsFile(labelsFilePath)
 
-            self.m_widgetCentralLayout.addWidget(container2)
-            self.m_widgetCentralLayout.addWidget(container1, 2)
+                self.m_bOpen = True
 
-
-            #self.mainWidget.setLayout(layout)
-            #self.layout.addWidget(self.mainWidget)
-
-
-
-            # Loading labels - if any
-            #lm = LabelManager.getInstance()
-            #lm.initFromFile(pathToFile=fileinfo.dir().path() + "/labels.txt")
-            baseFilePathForLabelsFile = os.path.splitext(fileinfo.filePath())[0] # Get the filepath without the extension
-            print ("File to open: " + baseFilePathForLabelsFile)
-            labelsFilePath = baseFilePathForLabelsFile + ".labels"
-            #labelsFilePath = fileinfo.dir().path() + "/labels.txt"
-            labelManager.initFromFile(pathToFile=labelsFilePath) # REPRENDRE ICI, le fichier des labels ne s'enregistre pas avec le nouveau nom.
-            self.m_server.updatePathLabelsFile(labelsFilePath)
+                self.m_widgetCentralLayout.setCurrentWidget(self.m_wOpen)
+                print ("[MainApplication::Open] Done")
+            else:
+                print("[MainApplication::open] Info - No file opened")
         else:
-            print ("[MainApplication::open] Info - No file opened")
+            self.deleteChildrenWidgets(self.m_wOpen)
+            self.m_widgetCentralLayout.setCurrentWidget(self.m_wOpen)
+            self.m_bOpen = False
+            self.open()
+            print ("[MainApplication::Open] Cannot load a new video for now. Please restart the application to load a new video")
+
+
+    def deleteChildrenWidgets(self, widget):
+        while (self.m_lOpen.count() > 0):
+
+            temp = self.m_lOpen.takeAt(0)
+            print(str(type(temp)))
+            if (type(temp) == QtWidgets.QWidgetItem):
+                temp.widget().hide() # for now widgets are "hidden". Not the cleanest way.
         
     def exit(self):
         
@@ -208,7 +240,7 @@ class MainApplication(QtWidgets.QMainWindow):
         app = QtWidgets.QApplication(sys.argv)
         GlobalFrame = MainApplication()
         GlobalFrame.show()
-        #print ("[MainApplication::run] Exiting application")
+        print ("[MainApplication::run] Exiting application")
         sys.exit(app.exec_())
         
         
