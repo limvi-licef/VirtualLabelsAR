@@ -13,7 +13,7 @@ if len(argv) != 2:
 else:
 
     from config import *
-    from compiler import *
+    #from compiler import *
     CLASSNAME = argv[1]
 
     exec(f"import lib.{CLASSNAME} as classModule")
